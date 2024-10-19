@@ -1,0 +1,76 @@
+// David's app
+  // build the app 
+    npx remix vite:build
+  // serve the app
+    npx remix-serve build/server/index.js
+
+  // OR if you want to run with your own express server 
+  node server.js
+
+  // Now that you own your server, you can debug your app with whatever tooling your server has. For example, you can inspect your app with chrome devtools with the Node.js inspect flag:
+    node --inspect server.js
+
+  // Vite middleware is not applied if process.env.NODE_ENV is set to "production", in which case you'll still be running the regular build output as you did earlier.
+
+
+  // Routing/layout
+    Landing Page /
+      two donation options 
+        “Donate Financially”
+        “Purchase or Donate Tools/Materials”
+      *Nice to have:
+        progress bar
+
+    /financial 
+      choose predefined amount OR enter custom amount
+      contact information form (name, email, phone)
+      Proceed to Payment button -> checkout with stripe
+      Confirmation page shows after successful payment
+
+      *Nice to have:
+        donation impact
+        share on social media
+
+
+    /materials
+      Presented with a list of needed tools/materials:
+        Item Name
+        Description
+        Quantity Needed
+        Quantity Donated
+        Quantity Remaining
+      Can add these to their cart 
+      **Contact information is in doc here; but this is kind of different from /financial flow
+        TODO: do we need to capture contact info before anything else and/or offer a login option?
+      For each cart item, can choose: Financial Donation OR Direct Delivery
+
+      *Nice to have 
+        Real-time progress tracking bar 
+
+    /cart/review
+      Review cart
+        donor can review cart, showing donation type (financial/direct delivery) and items selected 
+        for direct delivery, inform user they will receive delivery instructions after checkout is completed
+        contact information is confirmed (prob need this as first step above)
+      
+      *Nice to have 
+        Impact messaging
+          i.e. “Your donation will help provide hammers and nails for the new building”
+    
+    /cart/checkout 
+      Financial donation: Complete checkout, then show confirmation 
+        *Nice to have: social media sharing
+      Donation: Complete chckout, then show delivery instructions:
+        Delivery address
+        Contact person 
+        Info about follow-up communication to track the delivery
+        *Nice to have: periodic updates via email about how their contribution will be used
+
+
+
+
+    
+
+
+    
+
