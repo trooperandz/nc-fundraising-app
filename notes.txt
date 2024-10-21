@@ -66,9 +66,44 @@
         Info about follow-up communication to track the delivery
         *Nice to have: periodic updates via email about how their contribution will be used
 
+Code notes
+  materials table 
+    How to track state?
+      materialsDonation: {
+        [id: number]: {
+          qantity: number;
+          price: number;
+        }
+      }
 
+APi notes 
+  materials object response: TODO: convert strings to numbers?
+  {
+    example_url: "https://www.lowes.com/pd/Estwing-ESTWING-FGL-10-LB-SLEDGE/5001386941?store=1202&cm_mmc=shp-_-c-_-prd-_-sol-_-ggl-_-CRP_SHP_LIA_SOL_Online_E-F-_-5001386941-_-local-_-0-_-0&gad_source=1&gclid=Cj0KCQjwsc24BhDPARIsAFXqAB3_p8wTU_zZZr9UcOBL3OSsXuWWPJcz8ieh7gRz0U4ZhM1-Msnu2UoaAhfEEALw_wcB&gclsrc=aw.ds"
+    id: 11
+    item_category: "tool"
+    item_description: "Estwing 10-lb Polished Face Steel Head Fiberglass Sledge Hammer"
+    item_name: "Sledge Hammer"
+    quantity_donated: 0
+    quantity_needed: 1
+    quantity_remaining: 1
+    requester_id: null
+    status: "active"
+    unit_price: 44.98
+  }
 
+Questions for David 
+  Default check "financial" delivery type when add a quantity to a delivery item?
+  Want to show entire description? (kind of long)
+  Do you want to allow both a financial AND a materials donation (i.e. both routes possible)?
+  Do you want to hide materials that have quantity remaining of zero?
+  What about login etc?  Want the user to be able to make an account before going through the donation flow?
+    And if already have an account, the contact step/page is skipped?
 
+TODOs
+  Add table footer with totals for materials table?
+  ONly show a proceed button on materials page after a selection has been made?
+  Need any error handling for the selections at all?
     
 
 

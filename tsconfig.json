@@ -1,0 +1,6 @@
+{
+  "include": [
+    "src",
+    "index.d.ts" // or the name of your declaration file
+  ]
+}
