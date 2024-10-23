@@ -1,3 +1,4 @@
+import { json, LoaderFunction } from '@remix-run/node';
 import axios, { AxiosResponse } from 'axios';
 // import Config from 'react-native-config';
 
@@ -30,5 +31,14 @@ export const getMaterialsInventory = async () => {
   } catch (err) {
     console.error('Error fetching itineraries:', err);
     throw err;
+  }
+};
+
+export const loader: LoaderFunction = async ({ params }) => {
+  try {
+    const response = await donationApi.get('/tools_materials_inventory');
+    return json(response.data); // Return the data as JSON
+  } catch (error) {
+    throw new Response('Failed to load materials', { status: 500 });
   }
 };

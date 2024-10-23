@@ -1,11 +1,14 @@
 import * as React from 'react';
 
 export type MaterialDonation = {
-  [id: number]: {
-    quantity: number;
-    price: number;
-    deliveryType: string;
-  };
+  name: string;
+  quantity: number;
+  price: number;
+  deliveryType: string;
+};
+
+export type MaterialDonations = {
+  [id: number]: MaterialDonation;
 };
 
 export type RegisterUser = {
@@ -17,7 +20,9 @@ export type RegisterUser = {
 export type AppContext = {
   user: string | undefined;
   customDonation: string;
-  materialDonations: MaterialDonation;
+  donationDollarTotal: number;
+  materialDonations: MaterialDonations;
+  materialDonationsTotalCost: number;
   presetDonation: string | undefined;
   registerUser: RegisterUser;
   setCustomDonation: (customDonation: string) => void;
@@ -31,7 +36,8 @@ const AppContext = React.createContext<AppContext | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = React.useState<string>();
-  const [materialDonations, setMaterialDonations] = React.useState<any>({});
+  const [materialDonations, setMaterialDonations] =
+    React.useState<MaterialDonations>({});
   const [presetDonation, setPresetDonation] = React.useState<any>();
   const [registerUser, setRegisterUser] = React.useState<RegisterUser>({
     name: '',
@@ -40,11 +46,25 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   });
   const [customDonation, setCustomDonation] = React.useState<any>();
 
+  const materialDonationsTotalCost = React.useMemo(() => {
+    return Object.keys(materialDonations).reduce((acc, id) => {
+      const donation: MaterialDonation = materialDonations[id];
+
+      acc += Number(donation.price * donation.quantity);
+
+      return acc;
+    }, 0);
+  }, [materialDonations]);
+
   return (
     <AppContext.Provider
       value={{
         customDonation,
+        donationDollarTotal: (
+          Number(customDonation || presetDonation) + materialDonationsTotalCost
+        ).toFixed(2),
         materialDonations,
+        materialDonationsTotalCost,
         presetDonation,
         registerUser,
         setCustomDonation,
