@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Links, Meta, Outlet, Scripts } from '@remix-run/react';
 import type { LinksFunction } from '@remix-run/node';
+// @ts-ignore
 import tailwindStyles from './styles/tailwind.css?url'; // TODO: get index.d.ts to fix this type error
+// @ts-ignore
 import appStyles from './styles/index.css?url';
 import { AppProvider } from './providers/AppProvider';
 

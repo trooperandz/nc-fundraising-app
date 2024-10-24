@@ -2,13 +2,17 @@
 import { LinksFunction } from '@remix-run/node';
 import * as React from 'react';
 import { MaterialDonation, useAppContext } from '../providers/AppProvider';
+import { formatToDollars } from '../utils';
+import {
+  CurrencyDollarIcon,
+  WrenchScrewdriverIcon,
+} from '@heroicons/react/16/solid';
 
 interface Props {}
 
 export default function Cart() {
   const {
     customDonation,
-    donationDollarTotal,
     presetDonation,
     materialDonations,
     materialDonationsTotalCost,
@@ -18,10 +22,11 @@ export default function Cart() {
   return (
     <div>
       {customDonation || presetDonation ? (
-        <div>
+        <div className="flex items-center mb-4">
+          <CurrencyDollarIcon className="size-8 text-green-500 mr-2" />
           <h3 className="text-gray-600">Financial Donation:</h3>
-          <p className="font-bold">
-            ${Number(customDonation || presetDonation).toFixed(2)}
+          <p className="font-bold ml-3">
+            {formatToDollars(Number(customDonation || presetDonation))}
           </p>
         </div>
       ) : null}
@@ -29,8 +34,13 @@ export default function Cart() {
       <br />
 
       {materialDonationIds.length > 0 ? (
-        <div>
-          <h3 className="text-gray-600 mt-2">Materials Donations:</h3>
+        <div className="mb-8">
+          <div className="flex items-center">
+            <WrenchScrewdriverIcon className="size-6 text-amber-500 mr-2" />
+            <h3 className="text-gray-600 mt-2">Materials Donations:</h3>
+          </div>
+
+          <div className="border border-gray-200 w-full my-2" />
 
           <table>
             <thead>
@@ -65,20 +75,30 @@ export default function Cart() {
                 <td />
                 <td />
                 <td />
-                <td>${materialDonationsTotalCost.toFixed(2)}</td>
+                <td>{formatToDollars(materialDonationsTotalCost)}</td>
               </tr>
             </tfoot>
           </table>
         </div>
       ) : null}
 
-      <h3 className="text-gray-600 mt-7">Total Contribution:</h3>
-      <p className="font-bold">
-        $
-        {(
-          Number(customDonation || presetDonation) + materialDonationsTotalCost
-        ).toFixed(2)}
-      </p>
+      {materialDonationsTotalCost ? (
+        <div className="flex items-center mt-7 mb-6">
+          <>
+            <h3 className="text-gray-600">Total Contribution:</h3>
+            <p className="font-bold ml-3 text-green-600">
+              {formatToDollars(
+                Number(customDonation || presetDonation) +
+                  materialDonationsTotalCost,
+              )}
+            </p>
+          </>
+        </div>
+      ) : null}
+
+      {!presetDonation && !customDonation && !materialDonationsTotalCost ? (
+        <p>Your cart is empty</p>
+      ) : null}
     </div>
   );
 }

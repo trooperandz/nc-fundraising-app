@@ -20,13 +20,13 @@ export type RegisterUser = {
 export type AppContext = {
   user: string | undefined;
   customDonation: string;
-  donationDollarTotal: number;
+  donationDollarTotal: string;
   materialDonations: MaterialDonations;
   materialDonationsTotalCost: number;
   presetDonation: string | undefined;
   registerUser: RegisterUser;
   setCustomDonation: (customDonation: string) => void;
-  setMaterialDonations: (materialDonation: MaterialDonation) => void;
+  setMaterialDonations: (materialDonations: MaterialDonations) => void;
   setPresetDonation: (presetDonation: string | undefined) => void;
   setRegisterUser: (user: RegisterUser) => void;
   setUser: (user: string) => void;

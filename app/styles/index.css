@@ -9,3 +9,11 @@ h2 {
 h3 {
   font-size: 1.2em;
 }
+
+/* Whisky girl test image */
+.test-div {
+  background-image: url('../images/whisky-girl-bg.jpg');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 10px 200px;
+}

@@ -59,10 +59,14 @@ export default function DonateFinancial() {
                 <button
                   onClick={() => {
                     setCustomDonation('');
-                    setPresetDonation(donationAmount);
+                    setPresetDonation(
+                      presetDonation === donationAmount ? '' : donationAmount,
+                    );
                   }}
-                  className={`font-bold border-2 border-green-500 hover:bg-green-200 min-w-16 rounded-xl px-2 py-2 ${
-                    isMatchingDonation ? 'bg-green-500 text-white' : undefined
+                  className={`font-bold border-2 border-green-500 min-w-16 rounded-xl px-2 py-2 ${
+                    isMatchingDonation
+                      ? 'bg-green-500 hover:bg-green-400 text-white'
+                      : 'hover:bg-green-200'
                   }`}
                 >
                   ${donationAmount}
@@ -72,7 +76,13 @@ export default function DonateFinancial() {
           </div>
         </div>
 
-        <div className="mt-8">
+        <div className="flex flex-1 relative items-center w-30">
+          {/* TODO: get line absolute working */}
+          {/* <div className="border border-gray-200 w-30 h-2 my-2" /> */}
+          <p className=" text-gray-500 mt-12">OR</p>
+        </div>
+
+        <div className="mt-6">
           <div>
             <label
               htmlFor="dollar-input"
@@ -93,7 +103,7 @@ export default function DonateFinancial() {
                 className="block w-full rounded-md border-0 py-2.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 onChange={handleInputChange}
                 value={customDonation}
-                style={{ minWidth: 500 }}
+                style={{ minWidth: 500, fontSize: 16 }} // TODO: test responsive above; sm:text-sm
               />
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                 <span id="price-currency" className="text-gray-500 sm:text-sm">

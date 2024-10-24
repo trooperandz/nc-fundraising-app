@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Link, useNavigate, useNavigation } from '@remix-run/react';
 import Layout from '../components/Layout';
 import CartOverview from '../components/CartOverview';
+// @ts-ignore
 import stylesheet from '../styles/cart.css?url'; // TODO: get index.d.ts to fix this type error
 import { LinksFunction } from '@remix-run/node';
 
@@ -18,7 +19,7 @@ export default function CheckoutReview() {
   return (
     <Layout>
       <div className="flex flex-col items-center">
-        <h2 className="mb-12">Review Your Donations</h2>
+        <h2 className="mb-12">Review Your Donation</h2>
 
         <CartOverview />
 
@@ -29,8 +30,6 @@ export default function CheckoutReview() {
         >
           Proceed to Checkout
         </button>
-
-        {/* <Link to={`/cart`}>View Cart</Link>] */}
       </div>
     </Layout>
   );

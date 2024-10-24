@@ -105,7 +105,31 @@ TODOs
   ONly show a proceed button on materials page after a selection has been made?
   Need any error handling for the selections at all?
     
+Do you need the button at the end to whipe out donation style?
 
-
-    
-
+TODOs 
+  loading/error states on pages 
+  user login / account stuff
+    haven't done any actual user auth stuff yet
+  no "error" handling on the financial donation page or materials donation pages yet (can press the button with no errors)
+  materials delivery type stuff at checkout
+  conditional profile menu dropdown items (i.e. if not logged in, don't show "My Account", show "Log In", for instance)
+  overall styling (very basic now, no fancy or professional stuff really)
+  Do you need an admin page for you for donations summary etc?
+  Stripe payment processing integration
+  social sharing completion
+  mobile-responsiveness review; esp the materials table etc
+  materials table -> what about items that say remaining 0; hide those?
+    also need to finish the table input; you can type in it and we don't want that; also the input styling is stock browser
+  do you want the preset donation button amounts to come from an api?
+  general state management (i.e. only submit "cart" state at some point; the info is global now so will be in the cart once they enter amounts)
+  phone number input formatting (as you type); right now the validation is 10 digits (no other chars)
+  determine when to clear out cart state when payment setup is actually completed (now clearing the state on "Submit Payment")
+  want the About page?
+  want the Projects page?
+  sign out menu item is static; not rigged up
+  nothing done yet with any /sessions stuff 
+  what is the /requesters endpoint for?
+  need a favicon icon
+  need to add some navigation links/breadcrumbs to the views for better navigation
+  need to put it on a server with node so it can build
