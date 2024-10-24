@@ -70,8 +70,8 @@ export default function DonateMaterial() {
         <h2 className="mb-12">Donate Materials</h2>
         {materials?.length > 0 ? (
           <table>
-            <thead className="bg-slate-500 text-gray-500">
-              <tr className="bg-slate-500 text-white font-normal">
+            <thead className="!bg-slate-500 text-gray-500">
+              <tr className="!bg-slate-500 text-white font-normal">
                 <th className="px-3 w-32">Item Name</th>
                 <th className="px-3">Unit Price</th>
                 {/* <th style={{ width: 450 }}>Description</th> */}

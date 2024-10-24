@@ -88,7 +88,7 @@ export default function Cart() {
             <h3 className="text-gray-600">Total Contribution:</h3>
             <p className="font-bold ml-3 text-green-600">
               {formatToDollars(
-                Number(customDonation || presetDonation) +
+                Number(customDonation || presetDonation || 0) + // TODO: fix 0 issue
                   materialDonationsTotalCost,
               )}
             </p>
