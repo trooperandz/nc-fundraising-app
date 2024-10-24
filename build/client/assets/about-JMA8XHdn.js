@@ -1,0 +1,1 @@
+import{n as e}from"./components-CzUGsV2B.js";import{L as s}from"./Layout-Chk07N_d.js";function o(){return e.jsx(s,{children:e.jsx("div",{className:"flex flex-col flex-1 items-center",children:e.jsx("h2",{className:"mb-12",children:"About Us"})})})}export{o as default};
