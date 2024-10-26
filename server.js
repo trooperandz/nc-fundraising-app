@@ -1,26 +1,29 @@
-import { createRequestHandler } from "@remix-run/express";
-import express from "express";
+import { createRequestHandler } from '@remix-run/express';
+import express from 'express';
 
+const PORT = process.env.PORT || 3000;
+const env = process.env.NODE_ENV;
+console.log({ env });
 const viteDevServer =
-  process.env.NODE_ENV === "production"
+  env === 'production'
     ? null
-    : await import("vite").then((vite) =>
+    : await import('vite').then(vite =>
         vite.createServer({
           server: { middlewareMode: true },
-        })
+        }),
       );
 
 const app = express();
 app.use(
-  viteDevServer ? viteDevServer.middlewares : express.static("build/client")
+  viteDevServer ? viteDevServer.middlewares : express.static('build/client'),
 );
 
 const build = viteDevServer
-  ? () => viteDevServer.ssrLoadModule("virtual:remix/server-build")
-  : await import("./build/server/index.js");
+  ? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
+  : await import('./build/server/index.js');
 
-app.all("*", createRequestHandler({ build }));
+app.all('*', createRequestHandler({ build }));
 
-app.listen(3000, () => {
-  console.log("App listening on http://localhost:3000");
+app.listen(PORT, () => {
+  console.log(`App listening on http://localhost:${PORT}`);
 });
