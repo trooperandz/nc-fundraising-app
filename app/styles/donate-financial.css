@@ -1,0 +1,16 @@
+.dollar-buttons {
+  display: grid;
+  /* grid-template-columns: repeat(3, minmax(100px, 1fr)); */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px; /* Adjusts the spacing between buttons */
+}
+
+@media (min-width: 768px) {
+  .dollar-buttons {
+    grid-template-columns: repeat(
+      6,
+      1fr
+    ); /* Change to 4 columns on medium screens and larger */
+    gap: 15px; /* Increase spacing between buttons */
+  }
+}

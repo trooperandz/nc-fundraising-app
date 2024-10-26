@@ -224,7 +224,7 @@ export default function Layout({ children }) {
               <h1 className="flex text-3xl font-bold tracking-tight text-white justify-between">
                 Help Rebuild The Whisky Girl
                 <span
-                  className="text-sm self-end text-indigo-400 cursor-pointer"
+                  className="hidden md:inline text-sm self-end text-indigo-400 cursor-pointer"
                   onClick={() => setShowWhisky(!showWhiskey)}
                 >
                   {showWhiskey ? 'Hide Whisky' : 'Show Whisky'}

@@ -2,9 +2,15 @@
 import * as React from 'react';
 import { Link } from '@remix-run/react';
 import { useAppContext } from '../providers/AppProvider';
-import { json, LoaderFunction } from '@remix-run/node';
+import { json, LinksFunction, LoaderFunction } from '@remix-run/node';
 import { donationApi } from '../services/api';
+// @ts-ignore
+import stylesheet from '../styles/donate-financial.css?url'; // TODO: get index.d.ts to fix this type error
 import Layout from '../components/Layout';
+
+export const links: LinksFunction = () => [
+  { rel: 'stylesheet', href: stylesheet },
+];
 
 interface Props {}
 
@@ -44,14 +50,14 @@ export default function DonateFinancial() {
       <div className="flex flex-col flex-1 items-center">
         <h2 className="mb-12">Make a Financial Donation</h2>
 
-        <div>
+        <div className="flex flex-col w-full max-w-xl">
           <label
             htmlFor="dollar-input"
             className="block cursor-pointer mb-3 text-gray-500"
           >
             Select Amount
           </label>
-          <div className="flex gap-x-6">
+          <div className="dollar-buttons w-full">
             {donationAmounts.map(donationAmount => {
               const isMatchingDonation = presetDonation === donationAmount;
 
@@ -74,16 +80,10 @@ export default function DonateFinancial() {
               );
             })}
           </div>
-        </div>
 
-        <div className="flex flex-1 relative items-center w-30">
-          {/* TODO: get line absolute working */}
-          {/* <div className="border border-gray-200 w-30 h-2 my-2" /> */}
-          <p className=" text-gray-500 mt-12">OR</p>
-        </div>
+          <p className=" text-gray-500 mt-12 self-center">OR</p>
 
-        <div className="mt-6">
-          <div>
+          <div className="mt-6 w-full">
             <label
               htmlFor="dollar-input"
               className="block cursor-pointer leading-6 text-gray-500"
@@ -92,7 +92,7 @@ export default function DonateFinancial() {
             </label>
             <div className="relative mt-2 rounded-md shadow-sm">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <span className="text-gray-500 sm:text-sm">$</span>
+                <span className="text-gray-500 text-lg">$</span>
               </div>
               <input
                 id="dollar-input"
@@ -100,10 +100,9 @@ export default function DonateFinancial() {
                 type="text"
                 placeholder="0.00"
                 aria-describedby="price-currency"
-                className="block w-full rounded-md border-0 py-2.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-2.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg sm:leading-6"
                 onChange={handleInputChange}
                 value={customDonation}
-                style={{ minWidth: 500, fontSize: 16 }} // TODO: test responsive above; sm:text-sm
               />
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                 <span id="price-currency" className="text-gray-500 sm:text-sm">
