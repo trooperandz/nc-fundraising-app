@@ -74,7 +74,7 @@ export default function ContactInformation() {
   return (
     <Layout>
       <div className="flex flex-col items-center">
-        <h2>Your Contact Information</h2>
+        <h2>Enter Your Contact Information</h2>
 
         <div style={{ width: '450px' }}>
           <label

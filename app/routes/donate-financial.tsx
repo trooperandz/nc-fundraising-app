@@ -1,6 +1,6 @@
 // Shows options for financial-only donations
 import * as React from 'react';
-import { Link } from '@remix-run/react';
+import { Link, useNavigate } from '@remix-run/react';
 import { useAppContext } from '../providers/AppProvider';
 import { json, LinksFunction, LoaderFunction } from '@remix-run/node';
 import { donationApi } from '../services/api';
@@ -33,15 +33,27 @@ export default function DonateFinancial() {
     setPresetDonation,
   } = useAppContext();
 
-  console.log({ customDonation });
+  const navigate = useNavigate();
+
+  const [error, setError] = React.useState('');
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     const sanitizedValue = value.replace(/[^0-9.]/g, '');
 
     // Use regex to validate only numbers with at most one dot and two decimal places
     if (/^\d*\.?\d{0,2}$/.test(sanitizedValue)) {
+      setError('');
       setPresetDonation(undefined);
       setCustomDonation(sanitizedValue);
+    }
+  };
+
+  const handleContinue = () => {
+    if (!customDonation && !presetDonation) {
+      setError('Please enter a donation amount!');
+    } else {
+      navigate('/contact-information');
     }
   };
 
@@ -112,14 +124,15 @@ export default function DonateFinancial() {
             </div>
           </div>
         </div>
-        <Link to={`/contact-information`} className="mt-12">
-          <button
-            type="button"
-            className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-36"
-          >
-            Continue
-          </button>
-        </Link>
+
+        <button
+          onClick={handleContinue}
+          type="button"
+          className="rounded-md bg-blue-600 mt-12 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-36"
+        >
+          Continue
+        </button>
+        {error && <p className="tex-lg text-red-700 mt-8">{error}</p>}
       </div>
     </Layout>
   );
