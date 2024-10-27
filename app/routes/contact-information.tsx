@@ -1,8 +1,9 @@
 // Contact information form
 import * as React from 'react';
-import { Link, useNavigate } from '@remix-run/react';
+import { useNavigate } from '@remix-run/react';
 import { useAppContext } from '../providers/AppProvider';
 import Layout from '../components/Layout';
+import { formatPhoneNumber } from '../utils';
 
 interface Props {}
 
@@ -36,7 +37,7 @@ export default function ContactInformation() {
         updatedErrors.email = '';
         break;
       case 'phone':
-        let sanitizedValue = value.replace(/[^0-9-]/g, '');
+        let sanitizedValue = value.replace(/[^0-9]/g, '');
         setRegisterUser({ ...registerUser, [key]: sanitizedValue });
         updatedErrors.phone = '';
         break;
@@ -61,7 +62,7 @@ export default function ContactInformation() {
     }
 
     if (!registerUser.phone || !phoneRegex.test(registerUser.phone)) {
-      newErrors.phone = 'Please enter a valid phone number';
+      newErrors.phone = 'Please enter a valid phone number with ten digits';
     }
 
     setErrors(newErrors);
@@ -76,12 +77,12 @@ export default function ContactInformation() {
       <div className="flex flex-col items-center">
         <h2>Enter Your Contact Information</h2>
 
-        <div style={{ width: '450px' }}>
+        <div className="w-full max-w-md">
           <label
             htmlFor="name"
             className="block text-sm font-medium leading-6 mt-6 text-gray-900"
           >
-            Name
+            Full Name
           </label>
           <div className="mt-1">
             <input
@@ -104,7 +105,7 @@ export default function ContactInformation() {
             htmlFor="email"
             className="block text-sm font-medium leading-6 mt-3 text-gray-900"
           >
-            Email
+            Email Address
           </label>
           <div className="mt-1">
             <input
@@ -127,18 +128,18 @@ export default function ContactInformation() {
             htmlFor="phone"
             className="block text-sm font-medium leading-6 mt-3 text-gray-900"
           >
-            Phone
+            Phone Number
           </label>
           <div className="mt-1">
             <input
               id="phone"
               name="phone"
               type="tel"
-              placeholder="5555555555"
+              placeholder="(555) 555-5555"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 handleChangeText(e.target.value, 'phone')
               }
-              value={registerUser?.phone}
+              value={formatPhoneNumber(registerUser?.phone)}
               className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
             {errors.phone && (
