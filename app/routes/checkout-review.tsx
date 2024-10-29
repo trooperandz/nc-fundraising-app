@@ -6,6 +6,7 @@ import CartOverview from '../components/CartOverview';
 // @ts-ignore
 import stylesheet from '../styles/cart.css?url'; // TODO: get index.d.ts to fix this type error
 import { LinksFunction } from '@remix-run/node';
+import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -18,7 +19,16 @@ export default function CheckoutReview() {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center">
+      <div className="relative flex flex-col items-center">
+        <div className="absolute top-0 left-0 cursor-pointer">
+          <div
+            onClick={() => navigate(-1)}
+            className="flex flex-row items-center text-blue-600 hover:text-indigo-500"
+          >
+            <ArrowLeftCircleIcon className="w-10 h-10" />
+            <p className="ml-1">Back</p>
+          </div>
+        </div>
         <h2 className="mb-12">Review Your Donation</h2>
 
         <CartOverview />

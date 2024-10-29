@@ -1,6 +1,6 @@
 // Shows options for materials etc donation options
 import * as React from 'react';
-import { json, Link } from '@remix-run/react';
+import { json, Link, useNavigate } from '@remix-run/react';
 import { LinksFunction, LoaderFunction } from '@remix-run/node';
 import { donationApi, MaterialsInventory } from '../services/api';
 import { useLoaderData } from '@remix-run/react';
@@ -8,6 +8,7 @@ import { useAppContext } from '../providers/AppProvider';
 // @ts-ignore
 import stylesheet from '../styles/donate-material.css?url'; // TODO: get index.d.ts to fix this type error
 import Layout from '../components/Layout';
+import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -26,9 +27,17 @@ export const loader: LoaderFunction = async ({ params }) => {
 };
 
 export default function DonateMaterial() {
-  const { materialDonations, setMaterialDonations } = useAppContext();
+  const {
+    materialDonations,
+    materialDonationsTotalCost,
+    setMaterialDonations,
+  } = useAppContext();
+
+  const navigate = useNavigate();
 
   const materials = useLoaderData<MaterialsInventory>();
+
+  const [error, setError] = React.useState('');
 
   const handleCounterChange = (
     id: number,
@@ -38,6 +47,8 @@ export default function DonateMaterial() {
     deliveryType: string,
   ) => {
     if (quantity > 0) {
+      setError('');
+
       const updatedMaterialsDonation = {
         name,
         quantity,
@@ -64,10 +75,29 @@ export default function DonateMaterial() {
     });
   };
 
+  const handleContinue = () => {
+    if (materialDonationsTotalCost === 0) {
+      setError('Please make a selection before proceeding!');
+    } else {
+      navigate('/contact-information');
+    }
+  };
+
   return (
     <Layout>
-      <div className="flex flex-col flex-1 items-center">
+      <div className="relative flex flex-col flex-1 items-center">
+        <div className="absolute top-0 left-0">
+          <Link
+            to={`/`}
+            className="flex flex-row items-center text-blue-600 hover:text-indigo-500"
+          >
+            <ArrowLeftCircleIcon className="w-10 h-10" />{' '}
+            <p className="ml-1">Back</p>
+          </Link>
+        </div>
+
         <h2 className="mb-12">Donate Materials</h2>
+
         {materials?.length > 0 ? (
           <table>
             <thead className="!bg-slate-500 text-gray-500">
@@ -169,14 +199,14 @@ export default function DonateMaterial() {
           </table>
         ) : null}
 
-        <Link to={`/contact-information`} className="mt-12">
-          <button
-            type="button"
-            className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-36"
-          >
-            Continue
-          </button>
-        </Link>
+        <button
+          onClick={handleContinue}
+          type="button"
+          className="flex items-center justify-center rounded-md bg-blue-600 mt-4 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-36"
+        >
+          Continue
+        </button>
+        {error && <p className="tex-lg text-red-700 mt-8">{error}</p>}
       </div>
     </Layout>
   );

@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Link, useNavigate } from '@remix-run/react';
 import { useAppContext } from '../providers/AppProvider';
+import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
 import { json, LinksFunction, LoaderFunction } from '@remix-run/node';
 import { donationApi } from '../services/api';
 // @ts-ignore
@@ -59,7 +60,17 @@ export default function DonateFinancial() {
 
   return (
     <Layout>
-      <div className="flex flex-col flex-1 items-center">
+      <div className="relative flex flex-col flex-1 items-center">
+        <div className="absolute top-0 left-0">
+          <Link
+            to={`/`}
+            className="flex flex-row items-center text-blue-600 hover:text-indigo-500"
+          >
+            <ArrowLeftCircleIcon className="w-10 h-10" />{' '}
+            <p className="ml-1">Back</p>
+          </Link>
+        </div>
+
         <h2 className="mb-12">Make a Financial Donation</h2>
 
         <div className="flex flex-col w-full max-w-xl">
@@ -76,6 +87,7 @@ export default function DonateFinancial() {
               return (
                 <button
                   onClick={() => {
+                    setError('');
                     setCustomDonation('');
                     setPresetDonation(
                       presetDonation === donationAmount ? '' : donationAmount,
@@ -104,7 +116,7 @@ export default function DonateFinancial() {
             </label>
             <div className="relative mt-2 rounded-md shadow-sm">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <span className="text-gray-500 text-lg">$</span>
+                <span className="text-gray-500 text-md">$</span>
               </div>
               <input
                 id="dollar-input"
@@ -112,12 +124,12 @@ export default function DonateFinancial() {
                 type="text"
                 placeholder="0.00"
                 aria-describedby="price-currency"
-                className="block w-full rounded-md border-0 py-2.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-lg sm:leading-6"
+                className="block w-full rounded-md border-0 py-2.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 text-md sm:leading-6"
                 onChange={handleInputChange}
                 value={customDonation}
               />
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                <span id="price-currency" className="text-gray-500 sm:text-sm">
+                <span id="price-currency" className="text-gray-500 text-md">
                   USD
                 </span>
               </div>
@@ -128,9 +140,10 @@ export default function DonateFinancial() {
         <button
           onClick={handleContinue}
           type="button"
-          className="rounded-md bg-blue-600 mt-12 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-36"
+          className="flex items-center justify-center rounded-md bg-blue-600 mt-12 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-36"
         >
           Continue
+          {/* <ArrowRightIcon className="text-white w-4 h-4 font-semibold ml-2" /> */}
         </button>
         {error && <p className="tex-lg text-red-700 mt-8">{error}</p>}
       </div>
