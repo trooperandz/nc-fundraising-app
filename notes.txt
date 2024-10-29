@@ -111,6 +111,7 @@ TODOs
   loading/error states on pages 
   user login / account stuff
     haven't done any actual user auth stuff yet
+    David said no users will be logging in; so you can just rely on the contact information flow as-is, and also can probably remove the profile icon from menu
   no "error" handling on the financial donation page or materials donation pages yet (can press the button with no errors)
   materials delivery type stuff at checkout
   conditional profile menu dropdown items (i.e. if not logged in, don't show "My Account", show "Log In", for instance)
@@ -133,3 +134,13 @@ TODOs
   need a favicon icon
   need to add some navigation links/breadcrumbs to the views for better navigation
   need to put it on a server with node so it can build
+
+Digital Ocean 
+  nc-fundraising-app-digital-ocean-build-token
+  dop_v1_c8082919f01ff6f5cb2a183491db46aa122b833d3a1375d75071f254d21b91fc
+
+Helcium payment processing (really like their UI for the transitions etc);
+  https://hub.helcim.com/signup/business
+
+Stripe 
+  #=>m9wLA':iFtHk
