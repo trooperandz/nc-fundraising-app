@@ -70,6 +70,8 @@ export default function ContactInformation() {
 
     if (!newErrors.name && !newErrors.email && !newErrors.phone) {
       navigate('/checkout-review');
+    } else {
+      return;
     }
   };
 

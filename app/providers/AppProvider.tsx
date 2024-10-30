@@ -44,7 +44,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     email: '',
     phone: '',
   });
-  const [customDonation, setCustomDonation] = React.useState<any>();
+  const [customDonation, setCustomDonation] = React.useState<any>('');
 
   const materialDonationsTotalCost = React.useMemo(() => {
     return Object.keys(materialDonations).reduce((acc, id) => {

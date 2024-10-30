@@ -45,7 +45,7 @@ export default function DonateFinancial() {
     // Use regex to validate only numbers with at most one dot and two decimal places
     if (/^\d*\.?\d{0,2}$/.test(sanitizedValue)) {
       setError('');
-      setPresetDonation(undefined);
+      setPresetDonation('');
       setCustomDonation(sanitizedValue);
     }
   };
@@ -86,6 +86,7 @@ export default function DonateFinancial() {
 
               return (
                 <button
+                  key={donationAmount}
                   onClick={() => {
                     setError('');
                     setCustomDonation('');
