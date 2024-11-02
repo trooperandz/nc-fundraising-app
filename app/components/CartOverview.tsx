@@ -85,7 +85,7 @@ export default function Cart() {
                 onClick={() => {
                   navigate('/donate-material');
                 }}
-                className="flex items-center cursor-pointer"
+                className="flex items-center cursor-pointer mb-1"
               >
                 <PencilSquareIcon className="size-5 text-blue-600 hover:text-blue-400" />
               </div>
@@ -93,14 +93,14 @@ export default function Cart() {
                 onClick={() => {
                   setMaterialDonations({});
                 }}
-                className="flex items-center text-red-500 hover:text-red-400 cursor-pointer"
+                className="flex items-center text-red-500 hover:text-red-400 mb-1 cursor-pointer"
               >
                 <XCircleIcon className="size-5" />
               </div>
             </div>
           </div>
 
-          <div className="w-full overflow-x-auto px-4 py-4 bg-white rounded-lg">
+          <div className="w-full px-4 py-4 bg-white rounded-lg overflow-x-scroll">
             <table className="m-auto">
               <thead>
                 <tr className="text-gray-500 font-medium">
@@ -131,9 +131,9 @@ export default function Cart() {
                   );
                 })}
               </tbody>
-              <tfoot className="py-4">
+              <tfoot className="pt-4">
                 <tr className="py-4">
-                  <td className="pl-4 py-4">Total:</td>
+                  <td className="pl-4 pt-4">Total:</td>
                   <td />
                   <td />
                   <td />
@@ -168,8 +168,8 @@ export default function Cart() {
           <Button text="Back to Home" onClick={() => navigate('/')} />
         </div>
       ) : (
-        <div className="mb-4 w-full px-8 py-8 pt-4 bg-gray-100 rounded-lg">
-          <div className="flex items-center justify-between mb-0">
+        <div className="mb-4 w-full px-6 py-8 pt-4 bg-gray-100 rounded-lg">
+          <div className="flex justify-between mb-0">
             <div className="flex items-center mb-4 mt-2">
               <UserCircleIcon className="size-6 text-gray-500 mr-2" />
               <h3 className="text-gray-600">Review Contact Info:</h3>
@@ -180,30 +180,30 @@ export default function Cart() {
                 onClick={() => {
                   navigate('/contact-information');
                 }}
-                className="flex items-center cursor-pointer"
+                className="flex items-center cursor-pointer pb-1"
               >
                 <PencilSquareIcon className="size-5 text-blue-600 hover:text-blue-400" />
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col w-full px-8 py-8 bg-white rounded-lg">
+          <div className="flex flex-col w-full px-6 py-6 bg-white rounded-lg overflow-x-scroll">
             <div className="flex items-center">
-              <label className="mr-6 text-gray-500">Name:</label>
+              <label className="mr-4 md:mr-6 text-gray-500">Name:</label>
               <p className="font-light">{registerUser.name}</p>
             </div>
 
             <div className="divider" />
 
             <div className="flex items-center">
-              <label className="mr-6 text-gray-500">Email:</label>
+              <label className="mr-4 md:mr-6 text-gray-500">Email:</label>
               <p className="font-light">{registerUser.email}</p>
             </div>
 
             <div className="divider" />
 
             <div className="flex items-center">
-              <label className="mr-6 text-gray-500">Phone:</label>
+              <label className="mr-4 md:mr-6 text-gray-500">Phone:</label>
               <p className="font-light">{registerUser.phone}</p>
             </div>
 
