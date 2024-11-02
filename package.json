@@ -7,7 +7,7 @@
   "scripts": {
     "build:production": "npx remix vite:build",
     "serve:production": "npx remix-serve build/server/index.js",
-    "build": "npm run build:production && npm run serve:production",
+    "build": "npm install && npm run build:production && npm run serve:production",
     "dev": "node ./server.js",
     "start": "cross-env NODE_ENV=production node ./server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
