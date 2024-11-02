@@ -1,3 +1,7 @@
+export const classNames = (...classes: string[]) => {
+  return classes.filter(Boolean).join(' ');
+};
+
 export const formatToDollars = (amount: number | string) =>
   amount.toLocaleString('en-US', {
     style: 'currency',

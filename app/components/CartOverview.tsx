@@ -4,9 +4,15 @@ import { MaterialDonation, useAppContext } from '../providers/AppProvider';
 import { formatToDollars } from '../utils';
 import {
   CurrencyDollarIcon,
+  DocumentCurrencyDollarIcon,
+  PencilSquareIcon,
   WrenchScrewdriverIcon,
-  TrashIcon,
+  ShoppingBagIcon,
+  XCircleIcon,
+  UserCircleIcon,
 } from '@heroicons/react/16/solid';
+import { useNavigate } from '@remix-run/react';
+import Button from './Button';
 
 interface Props {}
 
@@ -16,34 +22,47 @@ export default function Cart() {
     presetDonation,
     materialDonations,
     materialDonationsTotalCost,
+    registerUser,
     setCustomDonation,
     setPresetDonation,
     setMaterialDonations,
   } = useAppContext();
 
   const materialDonationIds = Object.keys(materialDonations);
+  const navigate = useNavigate();
+
   return (
     <div className="relative flex flex-1 flex-col w-full max-w-lg items-center">
       {customDonation || presetDonation ? (
         <div className="mb-10 w-full px-6 py-6 bg-gray-100 rounded-lg">
           <div className="flex justify-between w-full mb-0">
-            <div className="flex items-center">
-              <CurrencyDollarIcon className="size-8 text-green-500 mr-2" />
+            <div className="flex items-center mb-0">
+              <DocumentCurrencyDollarIcon className="size-8 text-green-500 mr-2" />
               <h3 className="text-gray-600">Financial Donation</h3>
             </div>
-            <div
-              onClick={() => {
-                setCustomDonation('');
-                setPresetDonation('');
-              }}
-              className="flex items-center text-red-500 cursor-pointer"
-            >
-              <TrashIcon width={18} height={18} />
-              <p className="ml-1">Remove</p>
+
+            <div className="flex gap-2">
+              <div
+                onClick={() => {
+                  navigate('/donate-financial');
+                }}
+                className="flex items-center cursor-pointer"
+              >
+                <PencilSquareIcon className="size-5 text-blue-600 hover:text-blue-400" />
+              </div>
+              <div
+                onClick={() => {
+                  setCustomDonation('');
+                  setPresetDonation('');
+                }}
+                className="flex items-center text-red-500 hover:text-red-400 cursor-pointer"
+              >
+                <XCircleIcon className="size-5" />
+              </div>
             </div>
           </div>
 
-          <div className="border border-gray-200 w-full my-3" />
+          <div className="divider" />
 
           <p className="font-medium ml-3 self-start">
             {formatToDollars(Number(customDonation || presetDonation))}
@@ -56,22 +75,30 @@ export default function Cart() {
       {materialDonationIds.length > 0 ? (
         <div className="mb-4 w-full px-6 py-6 bg-gray-100 rounded-lg">
           <div className="flex items-center justify-between mb-0">
-            <div className="flex items-center">
+            <div className="flex items-center mb-4 mt-2">
               <WrenchScrewdriverIcon className="size-6 text-amber-500 mr-2" />
-              <h3 className="text-gray-600 mt-2">Materials Donations:</h3>
+              <h3 className="text-gray-600">Materials Donations</h3>
             </div>
-            <div
-              onClick={() => {
-                setMaterialDonations({});
-              }}
-              className="flex items-center text-red-500 cursor-pointer"
-            >
-              <TrashIcon width={18} height={18} />
-              <p className="ml-1">Remove</p>
+
+            <div className="flex gap-2">
+              <div
+                onClick={() => {
+                  navigate('/donate-material');
+                }}
+                className="flex items-center cursor-pointer"
+              >
+                <PencilSquareIcon className="size-5 text-blue-600 hover:text-blue-400" />
+              </div>
+              <div
+                onClick={() => {
+                  setMaterialDonations({});
+                }}
+                className="flex items-center text-red-500 hover:text-red-400 cursor-pointer"
+              >
+                <XCircleIcon className="size-5" />
+              </div>
             </div>
           </div>
-
-          <div className="border border-gray-200 w-full my-3" />
 
           <div className="w-full overflow-x-auto px-4 py-4 bg-white rounded-lg">
             <table className="m-auto">
@@ -133,8 +160,57 @@ export default function Cart() {
       ) : null}
 
       {!presetDonation && !customDonation && !materialDonationsTotalCost ? (
-        <p>Your cart is empty</p>
-      ) : null}
+        <div className="flex flex-col items-center mb-4 w-full px-6 py-6 bg-gray-100 rounded-lg">
+          <ShoppingBagIcon className="size-24 text-gray-400" />
+
+          <p className="mt-8">Your cart is currently empty.</p>
+
+          <Button text="Back to Home" onClick={() => navigate('/')} />
+        </div>
+      ) : (
+        <div className="mb-4 w-full px-8 py-8 pt-4 bg-gray-100 rounded-lg">
+          <div className="flex items-center justify-between mb-0">
+            <div className="flex items-center mb-4 mt-2">
+              <UserCircleIcon className="size-6 text-gray-500 mr-2" />
+              <h3 className="text-gray-600">Review Contact Info:</h3>
+            </div>
+
+            <div className="flex gap-2">
+              <div
+                onClick={() => {
+                  navigate('/contact-information');
+                }}
+                className="flex items-center cursor-pointer"
+              >
+                <PencilSquareIcon className="size-5 text-blue-600 hover:text-blue-400" />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col w-full px-8 py-8 bg-white rounded-lg">
+            <div className="flex items-center">
+              <label className="mr-6 text-gray-500">Name:</label>
+              <p className="font-light">{registerUser.name}</p>
+            </div>
+
+            <div className="divider" />
+
+            <div className="flex items-center">
+              <label className="mr-6 text-gray-500">Email:</label>
+              <p className="font-light">{registerUser.email}</p>
+            </div>
+
+            <div className="divider" />
+
+            <div className="flex items-center">
+              <label className="mr-6 text-gray-500">Phone:</label>
+              <p className="font-light">{registerUser.phone}</p>
+            </div>
+
+            <div className="divider" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

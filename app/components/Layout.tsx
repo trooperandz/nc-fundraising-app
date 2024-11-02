@@ -16,8 +16,10 @@ import {
   UserCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+// @ts-expect-error
 import whiskeyGirlImage from '../images/whisky-girl.jpg';
 import { Link, useNavigate } from '@remix-run/react';
+import { classNames } from '../utils';
 
 interface Props {}
 
@@ -37,10 +39,6 @@ const userNavigation = [
   // { name: 'Settings', href: '#' },
   { name: 'Sign out', href: '#' },
 ];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
 
 export default function Layout({ children }) {
   const [showWhiskey, setShowWhisky] = React.useState(true);
@@ -97,7 +95,7 @@ export default function Layout({ children }) {
                     <div className="ml-4 flex items-center md:ml-6">
                       <button
                         type="button"
-                        onClick={() => navigate('/cart')}
+                        onClick={() => navigate('/checkout-review')}
                         className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                       >
                         <span className="absolute -inset-1.5" />
@@ -222,16 +220,16 @@ export default function Layout({ children }) {
             </DisclosurePanel>
           </Disclosure>
           <header className="py-10">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <h1 className="flex text-3xl font-bold tracking-tight text-white justify-between">
+            <div className="flex justify-center md:justify-between w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+              <h1 className="text-3xl font-bold tracking-tight text-white">
                 Help Rebuild The Whisky Girl
-                <span
-                  className="hidden md:inline text-sm self-end text-indigo-400 cursor-pointer"
-                  onClick={() => setShowWhisky(!showWhiskey)}
-                >
-                  {showWhiskey ? 'Hide Whisky' : 'Show Whisky'}
-                </span>
               </h1>
+              <p
+                className="hidden md:inline text-sm font-medium self-end text-indigo-400 cursor-pointer"
+                onClick={() => setShowWhisky(!showWhiskey)}
+              >
+                {showWhiskey ? 'Hide Whisky' : 'Show Whisky'}
+              </p>
             </div>
           </header>
         </div>

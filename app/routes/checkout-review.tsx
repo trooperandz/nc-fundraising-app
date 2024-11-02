@@ -9,6 +9,7 @@ import { json, LinksFunction, redirect } from '@remix-run/node';
 import { useAppContext } from '../providers/AppProvider';
 import { donationApi } from '../services/api';
 import BackButton from '../components/BackButton';
+import Button from '../components/Button';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -77,6 +78,8 @@ export default function CheckoutReview() {
     registerUser,
   } = useAppContext();
 
+  const [error, setError] = React.useState('');
+
   const fetcher = useFetcher<FormData>();
 
   const navigate = useNavigate();
@@ -101,33 +104,36 @@ export default function CheckoutReview() {
 
         <CartOverview />
 
+        {error && <p className="tex-lg text-red-700 mt-2">{error}</p>}
+
         {isDonations ? (
-          <button
+          <Button
+            text="Proceed to Checkout"
             onClick={() => {
-              const cartItems = {
-                customDonation,
-                presetDonation,
-                registerUser,
-                materialDonations,
-              };
-
-              localStorage.setItem('appState', JSON.stringify(cartItems));
-
-              return fetcher.submit(
-                {
-                  emailAddress: registerUser.email,
+              if (!registerUser.email) {
+                setError('You must enter your contact information.');
+              } else {
+                const cartItems = {
                   customDonation,
                   presetDonation,
-                  materialDonationsTotalCost,
-                },
-                { method: 'post' },
-              );
+                  registerUser,
+                  materialDonations,
+                };
+
+                localStorage.setItem('appState', JSON.stringify(cartItems));
+
+                return fetcher.submit(
+                  {
+                    emailAddress: registerUser.email,
+                    customDonation,
+                    presetDonation,
+                    materialDonationsTotalCost,
+                  },
+                  { method: 'post' },
+                );
+              }
             }}
-            type="button"
-            className="rounded-md bg-blue-600 mt-6 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-36"
-          >
-            Proceed to Checkout
-          </button>
+          />
         ) : null}
       </div>
     </Layout>

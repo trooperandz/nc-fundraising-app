@@ -1,0 +1,26 @@
+import * as React from 'react';
+import { classNames } from '../utils';
+
+interface Props {
+  text: string;
+  onClick: () => void;
+}
+
+export default function Button({ onClick, text }: Props) {
+  return (
+    <button
+      onClick={onClick}
+      type="button"
+      className={classNames(
+        'flex items-center justify-center self-center rounded-md shadow-sm',
+        'w-full md:w-auto',
+        'mt-12 px-6 py-3',
+        'font-semibold text-sm text-white',
+        'bg-blue-600 hover:bg-indigo-500',
+        'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+      )}
+    >
+      {text}
+    </button>
+  );
+}

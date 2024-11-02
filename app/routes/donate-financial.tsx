@@ -2,13 +2,13 @@
 import * as React from 'react';
 import { Link, useNavigate } from '@remix-run/react';
 import { useAppContext } from '../providers/AppProvider';
-import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
 import { json, LinksFunction, LoaderFunction } from '@remix-run/node';
 import { donationApi } from '../services/api';
 // @ts-ignore
 import stylesheet from '../styles/donate-financial.css?url'; // TODO: get index.d.ts to fix this type error
 import Layout from '../components/Layout';
 import BackButton from '../components/BackButton';
+import Button from '../components/Button';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -30,6 +30,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 export default function DonateFinancial() {
   const {
     customDonation,
+    materialDonationsTotalCost,
     setCustomDonation,
     presetDonation,
     setPresetDonation,
@@ -62,7 +63,7 @@ export default function DonateFinancial() {
   return (
     <Layout>
       <div className="relative flex flex-col flex-1 items-center">
-        <BackButton onClick={() => navigate('/')} />
+        <BackButton onClick={() => navigate(-1)} />
 
         <h2 className="mb-12">Make a Financial Donation</h2>
 
@@ -129,16 +130,17 @@ export default function DonateFinancial() {
               </div>
             </div>
           </div>
+
+          <Button text="Continue" onClick={handleContinue} />
+
+          <Link
+            to={`/donate-material`}
+            className="text-blue-600 underline mt-6 text-center"
+          >
+            Make a Materials Donation
+          </Link>
         </div>
 
-        <button
-          onClick={handleContinue}
-          type="button"
-          className="flex items-center justify-center rounded-md bg-blue-600 mt-12 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-36"
-        >
-          Continue
-          {/* <ArrowRightIcon className="text-white w-4 h-4 font-semibold ml-2" /> */}
-        </button>
         {error && <p className="tex-lg text-red-700 mt-8">{error}</p>}
       </div>
     </Layout>

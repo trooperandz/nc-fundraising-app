@@ -6,6 +6,7 @@ import Layout from '../components/Layout';
 import { formatPhoneNumber } from '../utils';
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
 import BackButton from '../components/BackButton';
+import Button from '../components/Button';
 
 interface Props {}
 
@@ -155,13 +156,7 @@ export default function ContactInformation() {
             </div>
           </div>
 
-          <button
-            onClick={handleSubmit}
-            type="button"
-            className="rounded-md bg-blue-600 mt-6 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-36"
-          >
-            Proceed to Checkout
-          </button>
+          <Button text="Proceed to Checkout" onClick={handleSubmit} />
         </div>
       </div>
     </Layout>

@@ -10,6 +10,7 @@ import stylesheet from '../styles/donate-material.css?url'; // TODO: get index.d
 import Layout from '../components/Layout';
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
 import BackButton from '../components/BackButton';
+import Button from '../components/Button';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -29,6 +30,8 @@ export const loader: LoaderFunction = async ({ params }) => {
 
 export default function DonateMaterial() {
   const {
+    customDonation,
+    presetDonation,
     materialDonations,
     materialDonationsTotalCost,
     setMaterialDonations,
@@ -87,7 +90,7 @@ export default function DonateMaterial() {
   return (
     <Layout>
       <div className="relative flex flex-col flex-1 items-center">
-        <BackButton onClick={() => navigate('/')} />
+        <BackButton onClick={() => navigate(-1)} />
 
         <h2 className="mb-12">Donate Materials</h2>
 
@@ -202,13 +205,17 @@ export default function DonateMaterial() {
           </div>
         ) : null}
 
-        <button
-          onClick={handleContinue}
-          type="button"
-          className="flex items-center justify-center rounded-md bg-blue-600 mt-4 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-36"
+        <Button text="Continue" onClick={handleContinue} />
+
+        {/* {!customDonation && !presetDonation ? ( */}
+        <Link
+          to={`/donate-financial`}
+          className="text-blue-600 underline mt-6 text-center"
         >
-          Continue
-        </button>
+          Make a Financial Donation
+        </Link>
+        {/* ) : null} */}
+
         {error && <p className="tex-lg text-red-700 mt-8">{error}</p>}
       </div>
     </Layout>
