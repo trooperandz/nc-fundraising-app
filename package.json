@@ -9,6 +9,7 @@
     "serve:production": "npx remix-serve build/server/index.js",
     "build": "npm install && npm run build:production",
     "dev": "node ./server.js",
+    "serve": "cross-env NODE_ENV=production node ./server.js",
     "start": "npm run serve:production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

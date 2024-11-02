@@ -11,7 +11,6 @@ import {
 } from '@headlessui/react';
 import {
   Bars3Icon,
-  BellIcon,
   ShoppingCartIcon,
   UserCircleIcon,
   XMarkIcon,
@@ -23,21 +22,22 @@ import { classNames } from '../utils';
 
 interface Props {}
 
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-};
+// const user = {
+//   name: 'Tom Cook',
+//   email: 'tom@example.com',
+//   imageUrl:
+//     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+// };
+
 const navigation = [
   { name: 'Home', href: '/', current: true },
   { name: 'About', href: '/about', current: false },
   { name: 'Projects', href: '/projects', current: false },
 ];
 const userNavigation = [
-  { name: 'Your Account', href: '/profile' },
+  { name: 'Account', href: '/profile' },
   // { name: 'Settings', href: '#' },
-  { name: 'Sign out', href: '#' },
+  // { name: 'Sign out', href: '#' },
 ];
 
 export default function Layout({ children }) {
@@ -54,7 +54,10 @@ export default function Layout({ children }) {
               <div className="border-b border-gray-700">
                 <div className="flex h-16 items-center justify-between px-4 sm:px-0">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0">
+                    <div
+                      onClick={() => navigate('/')}
+                      className="flex-shrink-0 cursor-pointer"
+                    >
                       <img
                         alt="Whisky Girl Image"
                         src={whiskeyGirlImage}
@@ -180,19 +183,18 @@ export default function Layout({ children }) {
               </div>
               <div className="border-t border-gray-700 pb-3 pt-4">
                 <div className="flex items-center px-5">
-                  <div className="flex-shrink-0">
-                    <img
-                      alt=""
-                      src={user.imageUrl}
-                      className="h-10 w-10 rounded-full"
-                    />
+                  <div
+                    onClick={() => navigate('/checkout-review')}
+                    className="flex w-full text-base font-medium leading-none text-gray-400 cursor-pointer"
+                  >
+                    Cart
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium leading-none text-white">
-                      {user.name}
+                      {/* {user.name} */}
                     </div>
                     <div className="text-sm font-medium leading-none text-gray-400">
-                      {user.email}
+                      {/* {user.email} */}
                     </div>
                   </div>
                   <button
@@ -201,7 +203,7 @@ export default function Layout({ children }) {
                   >
                     <span className="absolute -inset-1.5" />
                     <span className="sr-only">View notifications</span>
-                    <BellIcon aria-hidden="true" className="h-6 w-6" />
+                    <ShoppingCartIcon aria-hidden="true" className="h-6 w-6" />
                   </button>
                 </div>
                 <div className="mt-3 space-y-1 px-2">
@@ -221,7 +223,7 @@ export default function Layout({ children }) {
           </Disclosure>
           <header className="py-10">
             <div className="flex justify-center md:justify-between w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-              <h1 className="text-3xl font-bold tracking-tight text-white">
+              <h1 className="font-bold tracking-tight text-white">
                 Help Rebuild The Whisky Girl
               </h1>
               <p

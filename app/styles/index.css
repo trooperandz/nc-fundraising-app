@@ -19,6 +19,10 @@ h3 {
 }
 
 @media (max-width: 768px) {
+  h1 {
+    font-size: 1.6em;
+  }
+
   .test-div {
     background-position: 0px 480px;
   }

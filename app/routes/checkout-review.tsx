@@ -15,6 +15,8 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
 ];
 
+const isProductionMode = process.env.NODE_ENV === 'production';
+
 export const action = async ({ request }) => {
   const formData = await request.formData();
 
@@ -22,12 +24,15 @@ export const action = async ({ request }) => {
   const customDonation = formData.get('customDonation');
   const presetDonation = formData.get('presetDonation');
   const materialDonationsTotalCost = formData.get('materialDonationsTotalCost');
+  const baseUrl = isProductionMode
+    ? 'https://clownfish-app-pnafy.ondigitalocean.app'
+    : 'http://localhost:3000';
 
   const data = {
     // TODO: email field is not pre-populating, don't know why (maybe because are in test mode?)
     customer_email: emailAddress,
-    success_url: 'http://localhost:3000/checkout-confirmation',
-    cancel_url: 'http://localhost:3000/checkout-review',
+    success_url: `${baseUrl}/checkout-confirmation`,
+    cancel_url: `${baseUrl}/checkout-review`,
     line_items: [
       {
         price_data: {
