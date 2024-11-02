@@ -5,6 +5,7 @@ import { useAppContext } from '../providers/AppProvider';
 import Layout from '../components/Layout';
 import { formatPhoneNumber } from '../utils';
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
+import BackButton from '../components/BackButton';
 
 interface Props {}
 
@@ -78,15 +79,7 @@ export default function ContactInformation() {
   return (
     <Layout>
       <div className="relative flex flex-col items-center">
-        <div className="absolute top-0 left-0 cursor-pointer">
-          <div
-            onClick={() => navigate(-1)}
-            className="flex flex-row items-center text-blue-600 hover:text-indigo-500"
-          >
-            <ArrowLeftCircleIcon className="w-10 h-10" />
-            <p className="ml-1">Back</p>
-          </div>
-        </div>
+        <BackButton onClick={() => navigate(-1)} />
 
         <h2>Enter Your Contact Information</h2>
 

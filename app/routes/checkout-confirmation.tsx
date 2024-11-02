@@ -7,6 +7,11 @@ import { ShareIcon } from '@heroicons/react/24/solid';
 interface Props {}
 
 export default function CheckoutConfirmation() {
+  React.useEffect(() => {
+    // Clear any saved user/cart info on successful checkout
+    localStorage.removeItem('appState');
+  }, []);
+
   return (
     <Layout>
       <div className="flex flex-col items-center">

@@ -17,3 +17,9 @@ h3 {
   background-size: contain;
   background-position: 10px 200px;
 }
+
+@media (max-width: 768px) {
+  .test-div {
+    background-position: 0px 480px;
+  }
+}

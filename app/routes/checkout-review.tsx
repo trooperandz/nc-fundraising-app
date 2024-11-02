@@ -1,14 +1,14 @@
 // Review cart/delivery items before finalizing checkout
 import * as React from 'react';
-import { Form, useFetcher, useNavigate } from '@remix-run/react';
+import { useFetcher, useNavigate } from '@remix-run/react';
 import Layout from '../components/Layout';
 import CartOverview from '../components/CartOverview';
 // @ts-ignore
 import stylesheet from '../styles/cart.css?url'; // TODO: get index.d.ts to fix this type error
 import { json, LinksFunction, redirect } from '@remix-run/node';
-import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
 import { useAppContext } from '../providers/AppProvider';
 import { donationApi } from '../services/api';
+import BackButton from '../components/BackButton';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -16,13 +16,14 @@ export const links: LinksFunction = () => [
 
 export const action = async ({ request }) => {
   const formData = await request.formData();
-  console.log({ formData });
+
   const emailAddress = formData.get('emailAddress');
   const customDonation = formData.get('customDonation');
   const presetDonation = formData.get('presetDonation');
   const materialDonationsTotalCost = formData.get('materialDonationsTotalCost');
 
   const data = {
+    // TODO: email field is not pre-populating, don't know why (maybe because are in test mode?)
     customer_email: emailAddress,
     success_url: 'http://localhost:3000/checkout-confirmation',
     cancel_url: 'http://localhost:3000/checkout-review',
@@ -36,9 +37,11 @@ export const action = async ({ request }) => {
                 ? 'Donation'
                 : 'Materials Donation',
           },
+          // In cents
           unit_amount:
-            Number(customDonation || presetDonation || 0) +
-            Number(materialDonationsTotalCost),
+            (Number(customDonation || presetDonation || 0) +
+              Number(materialDonationsTotalCost)) *
+            100,
         },
         quantity: 1,
       },
@@ -58,6 +61,13 @@ export const action = async ({ request }) => {
 
 interface Props {}
 
+interface FormData {
+  emailAddress: string;
+  customDonation: string;
+  presetDonation: string;
+  materialDonationsTotalCost: string;
+}
+
 export default function CheckoutReview() {
   const {
     customDonation,
@@ -66,44 +76,59 @@ export default function CheckoutReview() {
     materialDonationsTotalCost,
     registerUser,
   } = useAppContext();
-  console.log({ materialDonationsTotalCost });
-  const fetcher = useFetcher();
+
+  const fetcher = useFetcher<FormData>();
 
   const navigate = useNavigate();
 
+  const isDonations =
+    customDonation || presetDonation || materialDonationsTotalCost;
+
   return (
     <Layout>
-      <div className="relative flex flex-col items-center">
-        <div className="absolute top-0 left-0 cursor-pointer">
-          <div
-            onClick={() => navigate(-1)}
-            className="flex flex-row items-center text-blue-600 hover:text-indigo-500"
-          >
-            <ArrowLeftCircleIcon className="w-10 h-10" />
-            <p className="ml-1">Back</p>
-          </div>
-        </div>
+      <div className="relative flex flex-col w-full items-center">
+        <BackButton
+          onClick={() => {
+            navigate(
+              presetDonation || customDonation
+                ? '/donate-financial'
+                : '/donate-material',
+            );
+          }}
+        />
+
         <h2 className="mb-12">Review Your Donation</h2>
 
         <CartOverview />
 
-        <button
-          onClick={() =>
-            fetcher.submit(
-              {
-                emailAddress: registerUser.email,
+        {isDonations ? (
+          <button
+            onClick={() => {
+              const cartItems = {
                 customDonation,
                 presetDonation,
-                materialDonationsTotalCost,
-              },
-              { method: 'post' },
-            )
-          }
-          type="button"
-          className="rounded-md bg-blue-600 mt-6 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-36"
-        >
-          Proceed to Checkout
-        </button>
+                registerUser,
+                materialDonations,
+              };
+
+              localStorage.setItem('appState', JSON.stringify(cartItems));
+
+              return fetcher.submit(
+                {
+                  emailAddress: registerUser.email,
+                  customDonation,
+                  presetDonation,
+                  materialDonationsTotalCost,
+                },
+                { method: 'post' },
+              );
+            }}
+            type="button"
+            className="rounded-md bg-blue-600 mt-6 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-36"
+          >
+            Proceed to Checkout
+          </button>
+        ) : null}
       </div>
     </Layout>
   );

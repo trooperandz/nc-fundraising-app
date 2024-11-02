@@ -9,6 +9,7 @@ export default function Projects() {
     <Layout>
       <div className="flex flex-col flex-1 items-center">
         <h2 className="mb-12">Current Projects</h2>
+        <p>We rebuilt this city...</p>
       </div>
     </Layout>
   );

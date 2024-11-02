@@ -144,3 +144,51 @@ Helcium payment processing (really like their UI for the transitions etc);
 
 Stripe 
   #=>m9wLA':iFtHk
+
+Stripe link page from David:
+  https://checkout.stripe.com/c/pay/cs_test_a1cqoFrjUsWlx1XiTQVWSAuBBrgliDnksYydrpN3krzDfdhrIqCRo4zc5r#fidkdWxOYHwnPyd1blpxYHZxWjA0VEc2fGxNXEZtSlx2amtuYWlKfU19dlJvfF1NSVdCNE08SGBIM0lfXG5Hf1RcakB9NURKR0lycl83UlxRYDVWMWNHTUNJfE5%2FcmJkbTFJdTBpRjQwSUlqNTVXfFYxVnxCRCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl
+  /sessions endpoint data:
+  {
+    "success_url": "localhost:3000/checkout-confirmation",
+    "cancel_url": "localhost:3000/checkout-review",
+    "line_items": [
+      {
+        "price_data": {
+          "currency": "usd",
+          "product_data": { "name": "Custom Donation" },
+          "unit_amount": 5000 // Note that this has to be in cents
+        },
+        "quantity": 1
+      }
+    ]
+  }
+
+  Seeing a $2.00 on the stripe checkout page instead of $200.00, event though the unit_amount is actually 200:
+    data: '{"success_url":"http://localhost:3000/checkout-confirmation","cancel_url":"http://localhost:3000/checkout-review","line_items":[{"price_data":{"currency":"usd","product_data":{"name":"Donation"},"unit_amount":200},"quantity":1}]}'
+
+  <{ emailAddress: string; customDonation: string; presetDonation: string; materialDonationsTotalCost: number }>
+
+  From Stripe regarding email field:
+  customer_email: string
+    If provided, this value will be used when the Customer object is created. 
+    If not provided, customers will be asked to enter their email address. 
+    Use this parameter to prefill customer data if you already have an email on file. 
+    To access information about the customer once a session is complete, use the customer field.
+
+  url flow from stripe:
+    Checkout review -> Stripe 
+      User hits cancel, sends them back 
+       - Need to save ALL global data that was entered, but this wipes out global state -> maybe save in a cookie?
+          should we have a listener for browswer nav, if coming from Stripe back to checkout-review, to rewrite browser history and chop off last Stripe page (no, looks like Stripe does already)
+          On "Proceed to Checkout", 
+          Also on this page load "hydrate" the presetDonation, customDonation, materialDonationsTotalCost from localStorage
+    Stripe -> checkout-confirmation
+
+    Do we need a "clear cart" option also? Yeah prob
+
+    Only show cart to regular users
+      For simplicity, always show it; just show empty cart if nothing in localStorage
+
+Final TODOs 
+  Only show user nav icon if user is administrator (David?), or remove it?
+

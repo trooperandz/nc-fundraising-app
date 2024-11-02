@@ -8,6 +8,7 @@ import { donationApi } from '../services/api';
 // @ts-ignore
 import stylesheet from '../styles/donate-financial.css?url'; // TODO: get index.d.ts to fix this type error
 import Layout from '../components/Layout';
+import BackButton from '../components/BackButton';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -61,15 +62,7 @@ export default function DonateFinancial() {
   return (
     <Layout>
       <div className="relative flex flex-col flex-1 items-center">
-        <div className="absolute top-0 left-0">
-          <Link
-            to={`/`}
-            className="flex flex-row items-center text-blue-600 hover:text-indigo-500"
-          >
-            <ArrowLeftCircleIcon className="w-10 h-10" />{' '}
-            <p className="ml-1">Back</p>
-          </Link>
-        </div>
+        <BackButton onClick={() => navigate('/')} />
 
         <h2 className="mb-12">Make a Financial Donation</h2>
 

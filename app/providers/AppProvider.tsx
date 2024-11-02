@@ -38,13 +38,26 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = React.useState<string>();
   const [materialDonations, setMaterialDonations] =
     React.useState<MaterialDonations>({});
+  const [customDonation, setCustomDonation] = React.useState<any>('');
   const [presetDonation, setPresetDonation] = React.useState<any>();
   const [registerUser, setRegisterUser] = React.useState<RegisterUser>({
     name: '',
     email: '',
     phone: '',
   });
-  const [customDonation, setCustomDonation] = React.useState<any>('');
+
+  React.useEffect(() => {
+    const storageAppState = localStorage.getItem('appState');
+
+    if (storageAppState) {
+      const parsed = JSON.parse(storageAppState);
+
+      setMaterialDonations(parsed.materialDonations);
+      setPresetDonation(parsed.presetDonation);
+      setCustomDonation(parsed.customDonation);
+      setRegisterUser(parsed.registerUser);
+    }
+  }, []);
 
   const materialDonationsTotalCost = React.useMemo(() => {
     return Object.keys(materialDonations).reduce((acc, id) => {

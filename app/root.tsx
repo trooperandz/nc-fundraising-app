@@ -12,6 +12,13 @@ export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: appStyles },
 ];
 
+export function meta() {
+  return [
+    { name: 'viewport', content: 'width=device-width, initial-scale=1.0' },
+    // other meta tags
+  ];
+}
+
 export default function App() {
   return (
     <html className="h-full bg-gray-100">

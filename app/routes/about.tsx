@@ -9,6 +9,7 @@ export default function About() {
     <Layout>
       <div className="flex flex-col flex-1 items-center">
         <h2 className="mb-12">About Us</h2>
+        <p>No Homo</p>
       </div>
     </Layout>
   );
