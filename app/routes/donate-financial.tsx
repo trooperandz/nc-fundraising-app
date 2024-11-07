@@ -53,7 +53,7 @@ export default function DonateFinancial() {
   };
 
   const handleContinue = () => {
-    if (!customDonation && !presetDonation) {
+    if (!customDonation && !presetDonation && !materialDonationsTotalCost) {
       setError('Please enter a donation amount!');
     } else {
       navigate('/contact-information');
@@ -137,7 +137,7 @@ export default function DonateFinancial() {
             to={`/donate-material`}
             className="text-blue-600 underline mt-6 text-center"
           >
-            Make a Materials Donation
+            Want to make a materials donation?
           </Link>
         </div>
 

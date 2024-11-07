@@ -8,9 +8,9 @@ import { useAppContext } from '../providers/AppProvider';
 // @ts-ignore
 import stylesheet from '../styles/donate-material.css?url'; // TODO: get index.d.ts to fix this type error
 import Layout from '../components/Layout';
-import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
 import BackButton from '../components/BackButton';
 import Button from '../components/Button';
+import { classNames, formatToDollars } from '../utils';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -80,7 +80,11 @@ export default function DonateMaterial() {
   };
 
   const handleContinue = () => {
-    if (materialDonationsTotalCost === 0) {
+    if (
+      materialDonationsTotalCost === 0 &&
+      !presetDonation &&
+      !customDonation
+    ) {
       setError('Please make a selection before proceeding!');
     } else {
       navigate('/contact-information');
@@ -95,126 +99,117 @@ export default function DonateMaterial() {
         <h2 className="mb-12">Donate Materials</h2>
 
         {materials?.length > 0 ? (
-          <div className="w-full overflow-x-auto">
-            <table className="m-auto">
-              <thead className="!bg-slate-500 text-gray-500">
-                <tr className="!bg-slate-500 text-white font-normal">
-                  <th className="px-3 w-32">Item Name</th>
-                  <th className="px-3">Unit Price</th>
-                  {/* <th style={{ width: 450 }}>Description</th> */}
-                  <th className="px-3">Needed</th>
-                  <th className="px-3">Donated</th>
-                  <th>Remaining</th>
-                  <th className="px-3 w-22">Quantity</th>
-                  <th className="px-3 w-22">Donation Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                {materials.map(item => {
-                  return (
-                    item.quantity_remaining > 0 && (
-                      <tr>
-                        <td className="py-2 px-2">{item.item_name}</td>
-                        <td className="text-center">${item.unit_price}</td>
-                        {/* <td className="py-2">{item.item_description}</td> */}
-                        <td className="text-center">{item.quantity_needed}</td>
-                        <td className="text-center">{item.quantity_donated}</td>
-                        <td className="text-center">
-                          {item.quantity_remaining}
-                        </td>
-                        <td className="text-center">
-                          <input
-                            className="border border-gray-400 w-24 text-center rounded-md"
-                            type="number"
-                            max={item.quantity_remaining}
-                            min="0"
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>,
-                            ) =>
-                              handleCounterChange(
-                                item.id,
-                                item.item_name,
-                                Number(event.target.value),
-                                item.unit_price,
-                                materialDonations[item.id] &&
-                                  materialDonations[item.id].deliveryType
-                                  ? materialDonations[item.id].deliveryType
-                                  : 'financial',
-                              )
-                            }
-                            placeholder="Select"
-                            value={
-                              materialDonations[item.id]
-                                ? materialDonations[item.id].quantity
-                                : undefined
-                            }
-                          />
-                        </td>
-                        <td className="py-2">
-                          <label className="flex items-center space-x-2 cursor-pointer ml-6">
-                            <input
-                              className="form-radio"
-                              type="radio"
-                              name={`materials-donation-type-${item.id}`}
-                              onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                              ) =>
-                                handleDeliveryTypeChange(
-                                  item.id,
-                                  e.target.value,
-                                )
-                              }
-                              value="financial"
-                              checked={
-                                materialDonations[item.id] &&
-                                materialDonations[item.id].deliveryType ===
-                                  'financial'
-                              }
-                            />
-                            <span className="text-blue-600">Financial</span>
-                          </label>
-                          <label className="flex items-center space-x-2 cursor-pointer ml-6">
-                            <input
-                              className="form-radio"
-                              type="radio"
-                              name={`materials-donation-type-${item.id}`}
-                              onChange={(
-                                e: React.ChangeEvent<HTMLInputElement>,
-                              ) =>
-                                handleDeliveryTypeChange(
-                                  item.id,
-                                  e.target.value,
-                                )
-                              }
-                              value="delivery"
-                              checked={
-                                materialDonations[item.id] &&
-                                materialDonations[item.id].deliveryType ===
-                                  'delivery'
-                              }
-                            />
-                            <span className="text-blue-600">Delivery</span>
-                          </label>
-                        </td>
-                      </tr>
-                    )
-                  );
-                })}
-              </tbody>
-            </table>
+          <div className="w-full max-w-xl">
+            {materials.map(item => {
+              return (
+                <div
+                  key={item.id}
+                  className="px-4 pt-3 mb-4 bg-gray-100 rounded-md"
+                >
+                  <h4>{item.item_name}</h4>
+                  <div className="flex flex-row items-center">
+                    <p className="flex flex-1 text-green-600">
+                      {formatToDollars(item.unit_price)}
+                    </p>
+                    <div className="flex flex-1 items-center">
+                      <label
+                        htmlFor={`quantity-${item.id}`}
+                        className="mr-4 text-gray-500 font-light"
+                      >
+                        Quantity
+                      </label>
+                      <select
+                        id={`quantity-${item.id}`}
+                        name={`quantity-${item.id}`}
+                        className={classNames(
+                          'w-full min-w-14 rounded-md border border-gray-300 py-1.5',
+                          'sm:text-sm text-center text-base/5 font-medium text-gray-700 shadow-sm',
+                          'focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500',
+                        )}
+                        value={
+                          materialDonations[item.id]
+                            ? materialDonations[item.id].quantity
+                            : 0
+                        }
+                        onChange={(
+                          event: React.ChangeEvent<HTMLSelectElement>,
+                        ) => {
+                          handleCounterChange(
+                            item.id,
+                            item.item_name,
+                            Number(event.target.value),
+                            item.unit_price,
+                            materialDonations[item.id] &&
+                              materialDonations[item.id].deliveryType
+                              ? materialDonations[item.id].deliveryType
+                              : 'financial',
+                          );
+                        }}
+                      >
+                        {Array.from({
+                          length: item.quantity_remaining + 1,
+                        }).map((_, index) => {
+                          return (
+                            <option key={`${item.id}-${index}`} value={index}>
+                              {index}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                    <div className="py-2">
+                      <label className="flex items-center space-x-2 cursor-pointer ml-6">
+                        <input
+                          className="form-radio"
+                          type="radio"
+                          name={`materials-donation-type-${item.id}`}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            handleDeliveryTypeChange(item.id, e.target.value)
+                          }
+                          value="financial"
+                          checked={
+                            materialDonations[item.id]
+                              ? materialDonations[item.id].deliveryType ===
+                                'financial'
+                              : false
+                          }
+                        />
+                        <span className="text-blue-500">Donation</span>
+                      </label>
+                      <label className="flex items-center space-x-2 cursor-pointer ml-6">
+                        <input
+                          className="form-radio"
+                          type="radio"
+                          name={`materials-donation-type-${item.id}`}
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            handleDeliveryTypeChange(item.id, e.target.value)
+                          }
+                          value="delivery"
+                          checked={
+                            materialDonations[item.id]
+                              ? materialDonations[item.id].deliveryType ===
+                                'delivery'
+                              : false
+                          }
+                        />
+                        <span className="text-blue-500">Delivery</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         ) : null}
 
         <Button text="Continue" onClick={handleContinue} />
 
-        {/* {!customDonation && !presetDonation ? ( */}
         <Link
           to={`/donate-financial`}
           className="text-blue-600 underline mt-6 text-center"
         >
-          Make a Financial Donation
+          Want to make a financial donation?
         </Link>
-        {/* ) : null} */}
 
         {error && <p className="tex-lg text-red-700 mt-8">{error}</p>}
       </div>

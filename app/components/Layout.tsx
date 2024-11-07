@@ -224,7 +224,7 @@ export default function Layout({ children }) {
           <header className="py-10">
             <div className="flex justify-center md:justify-between w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <h1 className="font-bold tracking-tight text-white">
-                Help Rebuild The Whisky Girl
+                Help Rebuild Hot Springs
               </h1>
               <p
                 className="hidden md:inline text-sm font-medium self-end text-indigo-400 cursor-pointer"
