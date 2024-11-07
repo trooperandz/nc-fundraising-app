@@ -35,19 +35,17 @@ const navigation = [
   { name: 'Projects', href: '/projects', current: false },
 ];
 const userNavigation = [
-  { name: 'Account', href: '/profile' },
+  // { name: 'Account', href: '/profile' },
   // { name: 'Settings', href: '#' },
   // { name: 'Sign out', href: '#' },
 ];
 
 export default function Layout({ children }) {
-  const [showWhiskey, setShowWhisky] = React.useState(true);
-
   const navigate = useNavigate();
 
   return (
     <>
-      <div className={`min-h-full ${showWhiskey ? 'test-div' : ''}`}>
+      <div className="min-h-full">
         <div className="bg-gray-800 pb-32">
           <Disclosure as="nav" className="bg-gray-800">
             <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -226,12 +224,12 @@ export default function Layout({ children }) {
               <h1 className="font-bold tracking-tight text-white">
                 Help Rebuild Hot Springs
               </h1>
-              <p
+              {/* <p
                 className="hidden md:inline text-sm font-medium self-end text-indigo-400 cursor-pointer"
                 onClick={() => setShowWhisky(!showWhiskey)}
               >
                 {showWhiskey ? 'Hide Whisky' : 'Show Whisky'}
-              </p>
+              </p> */}
             </div>
           </header>
         </div>
