@@ -114,7 +114,7 @@ export default function DonateMaterial() {
                     <div className="flex flex-1 items-center">
                       <label
                         htmlFor={`quantity-${item.id}`}
-                        className="mr-4 text-gray-500 font-light"
+                        className="hidden md:inline mr-4 text-gray-500 font-light"
                       >
                         Quantity
                       </label>
