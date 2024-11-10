@@ -9,6 +9,7 @@ import stylesheet from '../styles/donate-financial.css?url'; // TODO: get index.
 import Layout from '../components/Layout';
 import BackButton from '../components/BackButton';
 import Button from '../components/Button';
+import Heading from '../components/Heading';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -71,7 +72,7 @@ export default function DonateFinancial() {
       <div className="relative flex flex-col flex-1 items-center">
         <BackButton onClick={() => navigate(-1)} />
 
-        <h2 className="mb-12">Make a Financial Donation</h2>
+        <Heading title="Make a Financial Donation" />
 
         <div className="flex flex-col w-full max-w-xl">
           <label

@@ -98,7 +98,6 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setRegisterUser(defaultRegisterUser);
   };
 
-  console.log({ materialDonationsTotalBreakdown });
   return (
     <AppContext.Provider
       value={{

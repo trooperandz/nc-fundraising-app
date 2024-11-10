@@ -11,6 +11,7 @@ import { donationApi } from '../services/api';
 import BackButton from '../components/BackButton';
 import Button from '../components/Button';
 import e from 'express';
+import Heading from '../components/Heading';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -28,8 +29,7 @@ export const action = async ({ request }) => {
   const baseUrl = isProductionMode
     ? 'https://clownfish-app-pnafy.ondigitalocean.app'
     : 'http://localhost:3000';
-  console.log(typeof customDonation);
-  console.log(typeof presetDonation);
+
   const data = {
     // TODO: email field is not pre-populating, don't know why (maybe because are in test mode?)
     customer_email: emailAddress,
@@ -47,7 +47,7 @@ export const action = async ({ request }) => {
           },
           // In cents
           unit_amount:
-            (Number(customDonation + presetDonation + 0) +
+            (Number(customDonation || presetDonation) +
               Number(materialDonationsFinancial)) *
             100,
         },
@@ -58,7 +58,6 @@ export const action = async ({ request }) => {
 
   try {
     const response = await donationApi.post('/sessions', data);
-    console.log({ response });
 
     return redirect(response.data.url);
   } catch (error) {
@@ -109,7 +108,7 @@ export default function CheckoutReview() {
           }}
         />
 
-        <h2 className="mb-10">Review Your Donation</h2>
+        <Heading title="Review Your Donation" />
 
         {!registerUser.email && isDonations && (
           <p className="tex-lg text-red-700 mt-0 mb-8">

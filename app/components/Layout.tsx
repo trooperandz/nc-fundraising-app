@@ -23,7 +23,7 @@ interface Props {}
 
 const navigation = [
   { name: 'Home', href: '/' },
-  { name: 'Donate Money', href: '/donate-financial' },
+  { name: 'Donate Funds', href: '/donate-financial' },
   { name: 'Donate Material', href: '/donate-material' },
   { name: 'About', href: '/about' },
 ];
@@ -226,7 +226,7 @@ export default function Layout({ children }) {
               </div>
             </DisclosurePanel>
           </Disclosure>
-          <header className="py-10">
+          <header className="pt-6 md:pt-10 pb-6 md:pb-10">
             <div className="flex justify-center md:justify-between w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <h1 className="font-bold tracking-tight text-white">
                 Help Rebuild Hot Springs

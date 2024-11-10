@@ -173,7 +173,7 @@ export default function Cart() {
                   const item: MaterialDonation = materialDonations[id];
 
                   return (
-                    <tr>
+                    <tr key={id}>
                       <td className="pl-4">{item.name}</td>
                       <td className="text-center">{item.quantity}</td>
                       <td className="text-center">${item.price.toFixed(2)}</td>

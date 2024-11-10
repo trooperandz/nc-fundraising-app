@@ -11,6 +11,7 @@ import Layout from '../components/Layout';
 import BackButton from '../components/BackButton';
 import Button from '../components/Button';
 import { classNames, formatToDollars } from '../utils';
+import Heading from '../components/Heading';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -98,7 +99,7 @@ export default function DonateMaterial() {
       <div className="relative flex flex-col flex-1 items-center">
         <BackButton onClick={() => navigate(-1)} />
 
-        <h2 className="mb-12">Donate Materials</h2>
+        <Heading title="Donate Materials" />
 
         {materials?.length > 0 ? (
           <div className="w-full max-w-xl">

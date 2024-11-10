@@ -7,6 +7,7 @@ import { formatPhoneNumber } from '../utils';
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
 import BackButton from '../components/BackButton';
 import Button from '../components/Button';
+import Heading from '../components/Heading';
 
 interface Props {}
 
@@ -82,13 +83,13 @@ export default function ContactInformation() {
       <div className="relative flex flex-col items-center">
         <BackButton onClick={() => navigate(-1)} />
 
-        <h2>Enter Your Contact Information</h2>
+        <Heading title="Enter Your Contact Information" />
 
         <div className="flex flex-col w-full max-w-md items-center">
           <div className="w-full">
             <label
               htmlFor="name"
-              className="block text-sm font-light leading-6 mt-6 text-gray-500"
+              className="block text-sm font-light leading-6 text-gray-500"
             >
               Full Name
             </label>

@@ -4,12 +4,12 @@ import { Link, useLocation } from '@remix-run/react';
 import Layout from '../components/Layout';
 import { ShareIcon } from '@heroicons/react/24/solid';
 import { AppContext, useAppContext } from '../providers/AppProvider';
+import Heading from '../components/Heading';
 
 export default function CheckoutConfirmation() {
   const { resetAppState } = useAppContext();
   const [cartState, setCartState] = React.useState<AppContext>();
   const location = useLocation();
-  console.log({ cartState });
 
   React.useEffect(() => {
     const storage = localStorage.getItem('appState');
@@ -28,7 +28,7 @@ export default function CheckoutConfirmation() {
   return (
     <Layout>
       <div className="flex flex-col items-center">
-        <h2 className="mb-8">Thank you for helping to rebuild Hot Springs!</h2>
+        <Heading title="Thank you for helping to rebuild Hot Springs!" />
 
         <p className="mb-8">
           A confirmation email has been sent to {cartState?.registerUser.email}.

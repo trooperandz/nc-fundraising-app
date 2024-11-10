@@ -8,6 +8,7 @@ import { LinksFunction } from '@remix-run/node';
 import Layout from '../components/Layout';
 import { useAppContext } from '../providers/AppProvider';
 import Button from '../components/Button';
+import Heading from '../components/Heading';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -24,7 +25,7 @@ export default function Cart() {
   return (
     <Layout>
       <div className="flex flex-col flex-1 items-center">
-        <h2 className="mb-12">Your Cart</h2>
+        <Heading title="Your Cart" />
 
         <CartOverview />
 
