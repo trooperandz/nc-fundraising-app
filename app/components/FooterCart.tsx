@@ -19,6 +19,7 @@ export default function FooterCart() {
     presetDonation + customDonation + materialDonationsTotalBreakdown.total;
 
   return location.pathname !== '/checkout-review' &&
+    location.pathname !== '/checkout-confirmation' &&
     totalDonationDollars > 0 ? (
     <div
       className="fixed px-4 py-4 bottom-0 left-0 right-0 bg-white z-10"
