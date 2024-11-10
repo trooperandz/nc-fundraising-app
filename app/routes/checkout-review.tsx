@@ -28,7 +28,8 @@ export const action = async ({ request }) => {
   const baseUrl = isProductionMode
     ? 'https://clownfish-app-pnafy.ondigitalocean.app'
     : 'http://localhost:3000';
-
+  console.log(typeof customDonation);
+  console.log(typeof presetDonation);
   const data = {
     // TODO: email field is not pre-populating, don't know why (maybe because are in test mode?)
     customer_email: emailAddress,
@@ -46,7 +47,7 @@ export const action = async ({ request }) => {
           },
           // In cents
           unit_amount:
-            (Number(customDonation || presetDonation || 0) +
+            (Number(customDonation + presetDonation + 0) +
               Number(materialDonationsFinancial)) *
             100,
         },
