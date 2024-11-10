@@ -27,9 +27,9 @@ export default function FooterCart() {
       <div className="flex flex-row items-center justify-between">
         <h4>
           Total Donation:{' '}
-          {/* <span className="text-green-600">
+          <span className="text-green-600">
             {formatToDollars(totalDonationDollars)}
-          </span> */}
+          </span>
         </h4>
         <Button
           styleClassNames="bg-green-600 hover:bg-green-700 mt-0"
@@ -40,6 +40,7 @@ export default function FooterCart() {
             );
           }}
           style={{
+            marginTop: 0,
             paddingLeft: '16px',
             paddingRight: '16px',
             paddingTop: '4px',
