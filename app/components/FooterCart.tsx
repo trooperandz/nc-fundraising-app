@@ -45,6 +45,7 @@ export default function FooterCart() {
             paddingTop: '4px',
             paddingBottom: '4px',
             fontSize: '16px',
+            width: 'auto',
           }}
         />
       </div>
