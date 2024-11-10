@@ -165,22 +165,26 @@ export default function Layout({ children }) {
 
             <DisclosurePanel className="border-b border-gray-700 md:hidden">
               <div className="space-y-1 px-2 py-3 sm:px-3">
-                {navigation.map(item => (
-                  <DisclosureButton
-                    key={item.name}
-                    as="a"
-                    href={item.href}
-                    aria-current={item.current ? 'page' : undefined}
-                    className={classNames(
-                      item.current
-                        ? 'bg-gray-900 text-white'
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                      'block rounded-md px-3 py-2 text-base font-medium',
-                    )}
-                  >
-                    {item.name}
-                  </DisclosureButton>
-                ))}
+                {navigation.map(item => {
+                  const isRouteActive = item.href === location.pathname;
+
+                  return (
+                    <DisclosureButton
+                      key={item.name}
+                      as="a"
+                      href={item.href}
+                      aria-current={isRouteActive ? 'page' : undefined}
+                      className={classNames(
+                        isRouteActive
+                          ? 'bg-gray-900 text-white'
+                          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        'block rounded-md px-3 py-2 text-base font-medium',
+                      )}
+                    >
+                      {item.name}
+                    </DisclosureButton>
+                  );
+                })}
               </div>
               <div className="border-t border-gray-700 pb-3 pt-4">
                 <div className="flex items-center px-5">

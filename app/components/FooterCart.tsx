@@ -32,7 +32,7 @@ export default function FooterCart() {
           </span>
         </h4>
         <Button
-          styleClassNames="bg-green-600 hover:bg-green-700 w-auto mt-0"
+          styleClassNames="bg-green-600 hover:bg-green-700 mt-0"
           text="Checkout"
           onClick={() => {
             navigate(
@@ -45,6 +45,7 @@ export default function FooterCart() {
             paddingTop: '4px',
             paddingBottom: '4px',
             fontSize: '16px',
+            width: 'auto',
           }}
         />
       </div>
