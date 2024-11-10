@@ -20,9 +20,9 @@ export default function Checkout() {
         <Link to={`/checkout-confirmation`} className="mt-12">
           <button
             onClick={() => {
-              setPresetDonation('');
-              setCustomDonation('');
-              setMaterialDonations({}); // TODO: state types
+              setPresetDonation(0);
+              setCustomDonation(0);
+              setMaterialDonations({});
             }}
             type="button"
             className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 min-w-36"

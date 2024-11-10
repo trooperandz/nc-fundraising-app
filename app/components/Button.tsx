@@ -2,11 +2,18 @@ import * as React from 'react';
 import { classNames } from '../utils';
 
 interface Props {
+  style?: React.CSSProperties;
   text: string;
   onClick: () => void;
+  styleClassNames?: string;
 }
 
-export default function Button({ onClick, text }: Props) {
+export default function Button({
+  onClick,
+  style,
+  styleClassNames = '',
+  text,
+}: Props) {
   return (
     <button
       onClick={onClick}
@@ -18,7 +25,9 @@ export default function Button({ onClick, text }: Props) {
         'font-semibold text-lg md:text-base text-white',
         'bg-blue-600 hover:bg-indigo-500',
         'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600',
+        styleClassNames,
       )}
+      style={style}
     >
       {text}
     </button>

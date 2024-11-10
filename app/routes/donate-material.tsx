@@ -33,7 +33,7 @@ export default function DonateMaterial() {
     customDonation,
     presetDonation,
     materialDonations,
-    materialDonationsTotalCost,
+    materialDonationsTotalBreakdown,
     setMaterialDonations,
   } = useAppContext();
 
@@ -81,11 +81,13 @@ export default function DonateMaterial() {
 
   const handleContinue = () => {
     if (
-      materialDonationsTotalCost === 0 &&
+      materialDonationsTotalBreakdown.total === 0 &&
       !presetDonation &&
       !customDonation
     ) {
-      setError('Please make a selection before proceeding!');
+      setError(
+        'Please make a financial or materials donation before proceeding!',
+      );
     } else {
       navigate('/contact-information');
     }
@@ -102,101 +104,107 @@ export default function DonateMaterial() {
           <div className="w-full max-w-xl">
             {materials.map(item => {
               return (
-                <div
-                  key={item.id}
-                  className="px-4 pt-3 mb-4 bg-gray-100 rounded-md"
-                >
-                  <h4>{item.item_name}</h4>
-                  <div className="flex flex-row items-center">
-                    <p className="flex flex-1 text-green-600">
-                      {formatToDollars(item.unit_price)}
-                    </p>
-                    <div className="flex flex-1 items-center">
-                      <label
-                        htmlFor={`quantity-${item.id}`}
-                        className="hidden md:inline mr-4 text-gray-500 font-light"
-                      >
-                        Quantity
-                      </label>
-                      <select
-                        id={`quantity-${item.id}`}
-                        name={`quantity-${item.id}`}
-                        className={classNames(
-                          'w-full min-w-14 rounded-md border border-gray-300 py-1.5',
-                          'sm:text-sm text-center text-base/5 font-medium text-gray-700 shadow-sm',
-                          'focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500',
-                        )}
-                        value={
-                          materialDonations[item.id]
-                            ? materialDonations[item.id].quantity
-                            : 0
-                        }
-                        onChange={(
-                          event: React.ChangeEvent<HTMLSelectElement>,
-                        ) => {
-                          handleCounterChange(
-                            item.id,
-                            item.item_name,
-                            Number(event.target.value),
-                            item.unit_price,
-                            materialDonations[item.id] &&
-                              materialDonations[item.id].deliveryType
-                              ? materialDonations[item.id].deliveryType
-                              : 'financial',
-                          );
-                        }}
-                      >
-                        {Array.from({
-                          length: item.quantity_remaining + 1,
-                        }).map((_, index) => {
-                          return (
-                            <option key={`${item.id}-${index}`} value={index}>
-                              {index}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </div>
-                    <div className="py-2">
-                      <label className="flex items-center space-x-2 cursor-pointer ml-6">
-                        <input
-                          className="form-radio"
-                          type="radio"
-                          name={`materials-donation-type-${item.id}`}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            handleDeliveryTypeChange(item.id, e.target.value)
-                          }
-                          value="financial"
-                          checked={
+                item.quantity_remaining > 0 && (
+                  <div
+                    key={item.id}
+                    className="px-4 pt-3 mb-4 bg-gray-100 rounded-md"
+                  >
+                    <h4>{item.item_name}</h4>
+                    <div className="flex flex-row items-center">
+                      <p className="flex flex-1 text-green-600">
+                        {formatToDollars(item.unit_price)}
+                      </p>
+                      <div className="flex flex-1 items-center">
+                        <label
+                          htmlFor={`quantity-${item.id}`}
+                          className="hidden md:inline mr-4 text-gray-500 font-light"
+                        >
+                          Quantity
+                        </label>
+                        <select
+                          id={`quantity-${item.id}`}
+                          name={`quantity-${item.id}`}
+                          className={classNames(
+                            'w-full min-w-14 rounded-md border border-gray-300 py-1.5',
+                            'sm:text-sm text-center text-base/5 font-medium text-gray-700 shadow-sm',
+                            'focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500',
+                          )}
+                          value={
                             materialDonations[item.id]
-                              ? materialDonations[item.id].deliveryType ===
-                                'financial'
-                              : false
+                              ? materialDonations[item.id].quantity
+                              : 0
                           }
-                        />
-                        <span className="text-blue-500">Donation</span>
-                      </label>
-                      <label className="flex items-center space-x-2 cursor-pointer ml-6">
-                        <input
-                          className="form-radio"
-                          type="radio"
-                          name={`materials-donation-type-${item.id}`}
-                          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            handleDeliveryTypeChange(item.id, e.target.value)
-                          }
-                          value="delivery"
-                          checked={
-                            materialDonations[item.id]
-                              ? materialDonations[item.id].deliveryType ===
-                                'delivery'
-                              : false
-                          }
-                        />
-                        <span className="text-blue-500">Delivery</span>
-                      </label>
+                          onChange={(
+                            event: React.ChangeEvent<HTMLSelectElement>,
+                          ) => {
+                            handleCounterChange(
+                              item.id,
+                              item.item_name,
+                              Number(event.target.value),
+                              item.unit_price,
+                              materialDonations[item.id] &&
+                                materialDonations[item.id].deliveryType
+                                ? materialDonations[item.id].deliveryType
+                                : 'financial',
+                            );
+                          }}
+                        >
+                          {Array.from({
+                            length: item.quantity_remaining + 1,
+                          }).map((_, index) => {
+                            return (
+                              <option key={`${item.id}-${index}`} value={index}>
+                                {index}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      <div className="py-2">
+                        <label className="flex items-center space-x-2 cursor-pointer ml-6">
+                          <input
+                            className="form-radio"
+                            type="radio"
+                            name={`materials-donation-type-${item.id}`}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>,
+                            ) =>
+                              handleDeliveryTypeChange(item.id, e.target.value)
+                            }
+                            value="financial"
+                            checked={
+                              materialDonations[item.id]
+                                ? materialDonations[item.id].deliveryType ===
+                                  'financial'
+                                : false
+                            }
+                          />
+                          <span className="text-blue-500">Donation</span>
+                        </label>
+                        <label className="flex items-center space-x-2 cursor-pointer ml-6">
+                          <input
+                            className="form-radio"
+                            type="radio"
+                            name={`materials-donation-type-${item.id}`}
+                            onChange={(
+                              e: React.ChangeEvent<HTMLInputElement>,
+                            ) =>
+                              handleDeliveryTypeChange(item.id, e.target.value)
+                            }
+                            value="delivery"
+                            checked={
+                              materialDonations[item.id]
+                                ? materialDonations[item.id].deliveryType ===
+                                  'delivery'
+                                : false
+                            }
+                          />
+                          <span className="text-blue-500">Delivery</span>
+                        </label>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )
               );
             })}
           </div>

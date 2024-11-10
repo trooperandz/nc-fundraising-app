@@ -27,3 +27,10 @@ h3 {
     background-position: 0px 480px;
   }
 }
+
+.wallpaper-background {
+  background-image: url('../images/moroccan-flower.png');
+  background-repeat: repeat;
+  /* background-size: contain; */
+  /* background-position: 10px 200px; */
+}

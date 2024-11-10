@@ -10,6 +10,7 @@ import { useAppContext } from '../providers/AppProvider';
 import { donationApi } from '../services/api';
 import BackButton from '../components/BackButton';
 import Button from '../components/Button';
+import e from 'express';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -23,7 +24,7 @@ export const action = async ({ request }) => {
   const emailAddress = formData.get('emailAddress');
   const customDonation = formData.get('customDonation');
   const presetDonation = formData.get('presetDonation');
-  const materialDonationsTotalCost = formData.get('materialDonationsTotalCost');
+  const materialDonationsFinancial = formData.get('materialDonationsFinancial');
   const baseUrl = isProductionMode
     ? 'https://clownfish-app-pnafy.ondigitalocean.app'
     : 'http://localhost:3000';
@@ -46,7 +47,7 @@ export const action = async ({ request }) => {
           // In cents
           unit_amount:
             (Number(customDonation || presetDonation || 0) +
-              Number(materialDonationsTotalCost)) *
+              Number(materialDonationsFinancial)) *
             100,
         },
         quantity: 1,
@@ -71,7 +72,7 @@ interface FormData {
   emailAddress: string;
   customDonation: string;
   presetDonation: string;
-  materialDonationsTotalCost: string;
+  materialDonationsFinancial: string;
 }
 
 export default function CheckoutReview() {
@@ -79,7 +80,7 @@ export default function CheckoutReview() {
     customDonation,
     presetDonation,
     materialDonations,
-    materialDonationsTotalCost,
+    materialDonationsTotalBreakdown,
     registerUser,
   } = useAppContext();
 
@@ -90,7 +91,9 @@ export default function CheckoutReview() {
   const navigate = useNavigate();
 
   const isDonations =
-    customDonation || presetDonation || materialDonationsTotalCost;
+    customDonation > 0 ||
+    presetDonation > 0 ||
+    materialDonationsTotalBreakdown.total > 0;
 
   return (
     <Layout>
@@ -105,7 +108,13 @@ export default function CheckoutReview() {
           }}
         />
 
-        <h2 className="mb-12">Review Your Donation</h2>
+        <h2 className="mb-10">Review Your Donation</h2>
+
+        {!registerUser.email && isDonations && (
+          <p className="tex-lg text-red-700 mt-0 mb-8">
+            Please edit your contact information.
+          </p>
+        )}
 
         <CartOverview />
 
@@ -113,26 +122,28 @@ export default function CheckoutReview() {
 
         {isDonations ? (
           <Button
-            text="Proceed to Checkout"
+            text="Proceed to Payment"
             onClick={() => {
               if (!registerUser.email) {
                 setError('You must enter your contact information.');
               } else {
-                const cartItems = {
+                const state = {
                   customDonation,
                   presetDonation,
                   registerUser,
                   materialDonations,
+                  materialDonationsTotalBreakdown,
                 };
 
-                localStorage.setItem('appState', JSON.stringify(cartItems));
+                localStorage.setItem('appState', JSON.stringify(state));
 
                 return fetcher.submit(
                   {
                     emailAddress: registerUser.email,
                     customDonation,
                     presetDonation,
-                    materialDonationsTotalCost,
+                    materialDonationsFinancial:
+                      materialDonationsTotalBreakdown.financial,
                   },
                   { method: 'post' },
                 );

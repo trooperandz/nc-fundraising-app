@@ -19,3 +19,9 @@ tfoot {
   margin-top: 14px;
   margin-bottom: 14px;
 }
+
+.subtotal {
+  padding-bottom: 4px;
+  border-bottom: 1px solid black;
+  box-shadow: 0 4px 0 0 black;
+}

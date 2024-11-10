@@ -17,34 +17,43 @@ export type RegisterUser = {
   phone: string;
 };
 
+export type MaterialDonationBreakdown = {
+  delivery: number;
+  financial: number;
+  total: number;
+};
+
 export type AppContext = {
   user: string | undefined;
-  customDonation: string;
-  donationDollarTotal: string;
+  customDonation: number;
   materialDonations: MaterialDonations;
-  materialDonationsTotalCost: number;
-  presetDonation: string | undefined;
+  materialDonationsTotalBreakdown: MaterialDonationBreakdown;
+  presetDonation: number;
   registerUser: RegisterUser;
-  setCustomDonation: (customDonation: string) => void;
+  resetAppState: () => void;
+  setCustomDonation: (customDonation: number) => void;
   setMaterialDonations: (materialDonations: MaterialDonations) => void;
-  setPresetDonation: (presetDonation: string | undefined) => void;
+  setPresetDonation: (presetDonation: number) => void;
   setRegisterUser: (user: RegisterUser) => void;
   setUser: (user: string) => void;
 };
 
 const AppContext = React.createContext<AppContext | undefined>(undefined);
 
+const defaultRegisterUser = {
+  name: '',
+  email: '',
+  phone: '',
+};
+
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = React.useState<string>();
   const [materialDonations, setMaterialDonations] =
     React.useState<MaterialDonations>({});
-  const [customDonation, setCustomDonation] = React.useState<any>('');
-  const [presetDonation, setPresetDonation] = React.useState<any>();
-  const [registerUser, setRegisterUser] = React.useState<RegisterUser>({
-    name: '',
-    email: '',
-    phone: '',
-  });
+  const [customDonation, setCustomDonation] = React.useState<number>(0);
+  const [presetDonation, setPresetDonation] = React.useState<number>(0);
+  const [registerUser, setRegisterUser] =
+    React.useState<RegisterUser>(defaultRegisterUser);
 
   React.useEffect(() => {
     const storageAppState = localStorage.getItem('appState');
@@ -59,27 +68,46 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  const materialDonationsTotalCost = React.useMemo(() => {
-    return Object.keys(materialDonations).reduce((acc, id) => {
-      const donation: MaterialDonation = materialDonations[id];
+  const materialDonationsTotalBreakdown = React.useMemo(() => {
+    return Object.keys(materialDonations).reduce(
+      (acc, id) => {
+        const materialDontation: MaterialDonation = materialDonations[id];
+        const type = materialDontation.deliveryType;
+        const isFinancial = type === 'financial';
+        const total = Number(
+          materialDontation.price * materialDontation.quantity,
+        );
 
-      acc += Number(donation.price * donation.quantity);
+        if (isFinancial) {
+          acc.financial += total;
+        } else {
+          acc.delivery += total;
+        }
+        acc.total += total;
 
-      return acc;
-    }, 0);
+        return acc;
+      },
+      { delivery: 0, financial: 0, total: 0 } as MaterialDonationBreakdown,
+    );
   }, [materialDonations]);
 
+  const resetAppState = () => {
+    setCustomDonation(0);
+    setMaterialDonations({});
+    setPresetDonation(0);
+    setRegisterUser(defaultRegisterUser);
+  };
+
+  console.log({ materialDonationsTotalBreakdown });
   return (
     <AppContext.Provider
       value={{
         customDonation,
-        donationDollarTotal: (
-          Number(customDonation || presetDonation) + materialDonationsTotalCost
-        ).toFixed(2),
         materialDonations,
-        materialDonationsTotalCost,
+        materialDonationsTotalBreakdown,
         presetDonation,
         registerUser,
+        resetAppState,
         setCustomDonation,
         setMaterialDonations,
         setPresetDonation,

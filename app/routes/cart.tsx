@@ -16,7 +16,7 @@ export const links: LinksFunction = () => [
 interface Props {}
 
 export default function Cart() {
-  const { customDonation, presetDonation, materialDonationsTotalCost } =
+  const { customDonation, presetDonation, materialDonationsTotalBreakdown } =
     useAppContext();
 
   const navigate = useNavigate();
@@ -28,9 +28,11 @@ export default function Cart() {
 
         <CartOverview />
 
-        {customDonation || presetDonation || materialDonationsTotalCost ? (
+        {customDonation ||
+        presetDonation ||
+        materialDonationsTotalBreakdown.total ? (
           <Button
-            text="Proceed to Checkout"
+            text="Proceed to Payment"
             onClick={() => navigate('/checkout-review')}
           />
         ) : null}

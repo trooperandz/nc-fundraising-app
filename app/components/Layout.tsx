@@ -5,35 +5,29 @@ import {
   DisclosureButton,
   DisclosurePanel,
   Menu,
-  MenuButton,
   MenuItem,
   MenuItems,
 } from '@headlessui/react';
 import {
   Bars3Icon,
   ShoppingCartIcon,
-  UserCircleIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 // @ts-expect-error
-import whiskeyGirlImage from '../images/whisky-girl.jpg';
-import { Link, useNavigate } from '@remix-run/react';
+import whiskeyGirlImage from '../images/whisky-girl.jpg'; // TODO: reduce image size
+import { Link, useLocation, useNavigate } from '@remix-run/react';
 import { classNames } from '../utils';
+import FooterCart from './FooterCart';
 
 interface Props {}
 
-// const user = {
-//   name: 'Tom Cook',
-//   email: 'tom@example.com',
-//   imageUrl:
-//     'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-// };
-
 const navigation = [
-  { name: 'Home', href: '/', current: true },
-  { name: 'About', href: '/about', current: false },
-  { name: 'Projects', href: '/projects', current: false },
+  { name: 'Home', href: '/' },
+  { name: 'Donate Money', href: '/donate-financial' },
+  { name: 'Donate Material', href: '/donate-material' },
+  { name: 'About', href: '/about' },
 ];
+
 const userNavigation = [
   // { name: 'Account', href: '/profile' },
   // { name: 'Settings', href: '#' },
@@ -41,11 +35,16 @@ const userNavigation = [
 ];
 
 export default function Layout({ children }) {
+  const location = useLocation();
   const navigate = useNavigate();
 
   return (
     <>
-      <div className="min-h-full">
+      <div
+        className="relative min-h-full wallpaper-background"
+        style={{ paddingBottom: '70px' }}
+      >
+        <FooterCart />
         <div className="bg-gray-800 pb-32">
           <Disclosure as="nav" className="bg-gray-800">
             <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -64,31 +63,35 @@ export default function Layout({ children }) {
                     </div>
                     <div className="hidden md:block">
                       <div className="ml-10 flex items-baseline space-x-4">
-                        {navigation.map(item => (
-                          <div
-                            key={item.name}
-                            className={classNames(
-                              'text-gray-300 hover:bg-gray-700 hover:text-white',
-                              'rounded-md px-3 py-2 text-sm font-medium',
-                              // item.current
-                              //   ? 'bg-gray-900 text-white'
-                              //   : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                              // 'rounded-md px-3 py-2 text-sm font-medium',
-                            )}
-                          >
-                            <Link
+                        {navigation.map(item => {
+                          const isRouteActive = item.href === location.pathname;
+
+                          return (
+                            <div
                               key={item.name}
-                              to={item.href}
-                              style={{
-                                textDecoration: 'none',
-                                color: 'inherit',
-                                backgroundColor: 'inherit',
-                              }}
+                              className={classNames(
+                                'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                'rounded-md px-3 py-2 text-sm font-medium',
+                                isRouteActive
+                                  ? 'bg-gray-900 text-white'
+                                  : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                'rounded-md px-3 py-2 text-sm font-medium',
+                              )}
                             >
-                              {item.name}
-                            </Link>
-                          </div>
-                        ))}
+                              <Link
+                                key={item.name}
+                                to={item.href}
+                                style={{
+                                  textDecoration: 'none',
+                                  color: 'inherit',
+                                  backgroundColor: 'inherit',
+                                }}
+                              >
+                                {item.name}
+                              </Link>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -109,7 +112,7 @@ export default function Layout({ children }) {
 
                       {/* Profile dropdown */}
                       <Menu as="div" className="relative ml-3">
-                        <div>
+                        {/* <div>
                           <MenuButton className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                             <span className="absolute -inset-1.5" />
                             <span className="sr-only">Open user menu</span>
@@ -120,13 +123,13 @@ export default function Layout({ children }) {
                               className="text-gray-400 hover:text-white"
                             />
                           </MenuButton>
-                        </div>
+                        </div> */}
                         <MenuItems
                           transition
                           className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                         >
                           {/* TODO: only show this if user is administrator? */}
-                          {userNavigation.map(item => (
+                          {/* {userNavigation.map(item => (
                             <MenuItem key={item.name}>
                               <a
                                 // href={item.href}
@@ -136,7 +139,7 @@ export default function Layout({ children }) {
                                 {item.name}
                               </a>
                             </MenuItem>
-                          ))}
+                          ))} */}
                         </MenuItems>
                       </Menu>
                     </div>
@@ -204,7 +207,7 @@ export default function Layout({ children }) {
                     <ShoppingCartIcon aria-hidden="true" className="h-6 w-6" />
                   </button>
                 </div>
-                <div className="mt-3 space-y-1 px-2">
+                {/* <div className="mt-3 space-y-1 px-2">
                   {userNavigation.map(item => (
                     <DisclosureButton
                       key={item.name}
@@ -215,7 +218,7 @@ export default function Layout({ children }) {
                       {item.name}
                     </DisclosureButton>
                   ))}
-                </div>
+                </div> */}
               </div>
             </DisclosurePanel>
           </Disclosure>
@@ -224,12 +227,6 @@ export default function Layout({ children }) {
               <h1 className="font-bold tracking-tight text-white">
                 Help Rebuild Hot Springs
               </h1>
-              {/* <p
-                className="hidden md:inline text-sm font-medium self-end text-indigo-400 cursor-pointer"
-                onClick={() => setShowWhisky(!showWhiskey)}
-              >
-                {showWhiskey ? 'Hide Whisky' : 'Show Whisky'}
-              </p> */}
             </div>
           </header>
         </div>

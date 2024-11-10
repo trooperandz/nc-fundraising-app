@@ -16,7 +16,7 @@ export const links: LinksFunction = () => [
 
 interface Props {}
 
-const donationAmounts = ['25', '50', '100', '150', '200', '250'];
+const donationAmounts = [25, 50, 100, 150, 200, 250];
 
 export const loader: LoaderFunction = async ({ params }) => {
   try {
@@ -30,7 +30,7 @@ export const loader: LoaderFunction = async ({ params }) => {
 export default function DonateFinancial() {
   const {
     customDonation,
-    materialDonationsTotalCost,
+    materialDonationsTotalBreakdown,
     setCustomDonation,
     presetDonation,
     setPresetDonation,
@@ -47,14 +47,20 @@ export default function DonateFinancial() {
     // Use regex to validate only numbers with at most one dot and two decimal places
     if (/^\d*\.?\d{0,2}$/.test(sanitizedValue)) {
       setError('');
-      setPresetDonation('');
-      setCustomDonation(sanitizedValue);
+      setPresetDonation(0);
+      setCustomDonation(Number(sanitizedValue));
     }
   };
 
   const handleContinue = () => {
-    if (!customDonation && !presetDonation && !materialDonationsTotalCost) {
-      setError('Please enter a donation amount!');
+    if (
+      !customDonation &&
+      !presetDonation &&
+      !materialDonationsTotalBreakdown.total
+    ) {
+      setError(
+        'Please make a financial or materials donation before proceeding!',
+      );
     } else {
       navigate('/contact-information');
     }
@@ -83,9 +89,9 @@ export default function DonateFinancial() {
                   key={donationAmount}
                   onClick={() => {
                     setError('');
-                    setCustomDonation('');
+                    setCustomDonation(0);
                     setPresetDonation(
-                      presetDonation === donationAmount ? '' : donationAmount,
+                      presetDonation === donationAmount ? 0 : donationAmount,
                     );
                   }}
                   className={`font-bold border-2 border-green-500 min-w-16 rounded-xl px-2 py-2 ${

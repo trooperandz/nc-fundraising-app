@@ -1,9 +1,15 @@
 // Cart summary/overview page
 import * as React from 'react';
+import {
+  Description,
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle,
+} from '@headlessui/react';
 import { MaterialDonation, useAppContext } from '../providers/AppProvider';
 import { formatToDollars } from '../utils';
 import {
-  CurrencyDollarIcon,
   DocumentCurrencyDollarIcon,
   PencilSquareIcon,
   WrenchScrewdriverIcon,
@@ -21,20 +27,72 @@ export default function Cart() {
     customDonation,
     presetDonation,
     materialDonations,
-    materialDonationsTotalCost,
+    materialDonationsTotalBreakdown,
     registerUser,
     setCustomDonation,
     setPresetDonation,
     setMaterialDonations,
   } = useAppContext();
 
+  const [deleteRequestType, setDeleteRequestType] = React.useState('');
+
+  const isDonation =
+    presetDonation > 0 ||
+    customDonation > 0 ||
+    materialDonationsTotalBreakdown.total > 0;
   const materialDonationIds = Object.keys(materialDonations);
+
   const navigate = useNavigate();
 
   return (
     <div className="relative flex flex-1 flex-col w-full max-w-lg items-center">
-      {customDonation || presetDonation ? (
-        <div className="mb-10 w-full px-6 py-6 bg-gray-100 rounded-lg">
+      {isDonation && (
+        <div className="mb-6 w-full px-6 py-8 pt-4 bg-gray-100 rounded-lg">
+          <div className="flex justify-between mb-0">
+            <div className="flex items-center mb-4 mt-2">
+              <UserCircleIcon className="size-6 text-gray-500 mr-2" />
+              <h3 className="text-gray-600">Contact Information:</h3>
+            </div>
+
+            <div className="flex gap-2">
+              <div
+                onClick={() => {
+                  navigate('/contact-information');
+                }}
+                className="flex items-center cursor-pointer pb-1"
+              >
+                <PencilSquareIcon className="size-5 text-blue-600 hover:text-blue-400" />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col w-full px-6 py-6 bg-white rounded-lg overflow-x-scroll">
+            <div className="flex items-center">
+              <label className="mr-4 md:mr-6 text-gray-500">Name:</label>
+              <p className="font-light">{registerUser.name}</p>
+            </div>
+
+            <div className="divider" />
+
+            <div className="flex items-center">
+              <label className="mr-4 md:mr-6 text-gray-500">Email:</label>
+              <p className="font-light">{registerUser.email}</p>
+            </div>
+
+            <div className="divider" />
+
+            <div className="flex items-center">
+              <label className="mr-4 md:mr-6 text-gray-500">Phone:</label>
+              <p className="font-light">{registerUser.phone}</p>
+            </div>
+
+            <div className="divider" />
+          </div>
+        </div>
+      )}
+
+      {customDonation > 0 || presetDonation > 0 ? (
+        <div className="mb-6 w-full px-6 py-6 bg-gray-100 rounded-lg">
           <div className="flex justify-between w-full mb-0">
             <div className="flex items-center mb-0">
               <DocumentCurrencyDollarIcon className="size-8 text-green-500 mr-2" />
@@ -52,10 +110,9 @@ export default function Cart() {
               </div>
               <div
                 onClick={() => {
-                  setCustomDonation('');
-                  setPresetDonation('');
+                  setDeleteRequestType('donate-financial');
                 }}
-                className="flex items-center text-red-500 hover:text-red-400 cursor-pointer"
+                className="flex items-center text-gray-400 hover:text-red-500 cursor-pointer"
               >
                 <XCircleIcon className="size-5" />
               </div>
@@ -73,7 +130,7 @@ export default function Cart() {
       <br />
 
       {materialDonationIds.length > 0 ? (
-        <div className="mb-4 w-full px-6 py-6 bg-gray-100 rounded-lg">
+        <div className="mb-6 w-full px-6 py-6 bg-gray-100 rounded-lg">
           <div className="flex items-center justify-between mb-0">
             <div className="flex items-center mb-4 mt-2">
               <WrenchScrewdriverIcon className="size-6 text-amber-500 mr-2" />
@@ -91,9 +148,9 @@ export default function Cart() {
               </div>
               <div
                 onClick={() => {
-                  setMaterialDonations({});
+                  setDeleteRequestType('donate-material');
                 }}
-                className="flex items-center text-red-500 hover:text-red-400 mb-1 cursor-pointer"
+                className="flex items-center text-gray-400 hover:text-red-500 mb-1 cursor-pointer"
               >
                 <XCircleIcon className="size-5" />
               </div>
@@ -133,84 +190,117 @@ export default function Cart() {
               </tbody>
               <tfoot className="pt-4">
                 <tr className="py-4">
-                  <td className="pl-4 pt-4">Total:</td>
+                  <td className="pl-4 pt-2 font-normal">Total:</td>
                   <td />
                   <td />
                   <td />
-                  <td>{formatToDollars(materialDonationsTotalCost)}</td>
+                  <td className="font-normal">
+                    {formatToDollars(materialDonationsTotalBreakdown.total)}
+                  </td>
                 </tr>
+                {materialDonationsTotalBreakdown.delivery > 0 && (
+                  <>
+                    <tr className="py-2">
+                      <td
+                        colSpan={2}
+                        className="pl-4 pt-2 font-normal subtotal"
+                      >
+                        For Delivery
+                      </td>
+                      <td className="subtotal" />
+                      <td className="subtotal" />
+                      <td className="text-red-600 font-normal pt-2 subtotal">{`(${formatToDollars(
+                        materialDonationsTotalBreakdown.delivery,
+                      )})`}</td>
+                    </tr>
+                    <tr>
+                      <td colSpan={2} className="pl-4 pt-2">
+                        Due now:
+                      </td>
+                      <td />
+                      <td />
+                      <td className="pt-2 text-center">
+                        {formatToDollars(
+                          materialDonationsTotalBreakdown.financial,
+                        )}
+                      </td>
+                    </tr>
+                  </>
+                )}
               </tfoot>
             </table>
           </div>
         </div>
       ) : null}
 
-      {materialDonationsTotalCost ? (
+      {materialDonationsTotalBreakdown.financial > 0 ? (
         <div className="flex items-center mt-7 mb-6">
           <>
-            <h3 className="text-gray-600">Total Contribution:</h3>
+            <h3 className="text-gray-600">Total Donation Due Now:</h3>
             <p className="font-bold ml-3 text-green-600">
               {formatToDollars(
                 Number(customDonation || presetDonation || 0) + // TODO: fix 0 issue
-                  materialDonationsTotalCost,
+                  materialDonationsTotalBreakdown.financial,
               )}
             </p>
           </>
         </div>
       ) : null}
 
-      {!presetDonation && !customDonation && !materialDonationsTotalCost ? (
+      {!isDonation && (
         <div className="flex flex-col items-center mb-4 w-full px-6 py-6 bg-gray-100 rounded-lg">
           <ShoppingBagIcon className="size-24 text-gray-400" />
 
           <p className="mt-8">Your cart is currently empty.</p>
 
-          <Button text="Back to Home" onClick={() => navigate('/')} />
-        </div>
-      ) : (
-        <div className="mb-4 w-full px-6 py-8 pt-4 bg-gray-100 rounded-lg">
-          <div className="flex justify-between mb-0">
-            <div className="flex items-center mb-4 mt-2">
-              <UserCircleIcon className="size-6 text-gray-500 mr-2" />
-              <h3 className="text-gray-600">Review Contact Info:</h3>
-            </div>
-
-            <div className="flex gap-2">
-              <div
-                onClick={() => {
-                  navigate('/contact-information');
-                }}
-                className="flex items-center cursor-pointer pb-1"
-              >
-                <PencilSquareIcon className="size-5 text-blue-600 hover:text-blue-400" />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col w-full px-6 py-6 bg-white rounded-lg overflow-x-scroll">
-            <div className="flex items-center">
-              <label className="mr-4 md:mr-6 text-gray-500">Name:</label>
-              <p className="font-light">{registerUser.name}</p>
-            </div>
-
-            <div className="divider" />
-
-            <div className="flex items-center">
-              <label className="mr-4 md:mr-6 text-gray-500">Email:</label>
-              <p className="font-light">{registerUser.email}</p>
-            </div>
-
-            <div className="divider" />
-
-            <div className="flex items-center">
-              <label className="mr-4 md:mr-6 text-gray-500">Phone:</label>
-              <p className="font-light">{registerUser.phone}</p>
-            </div>
-
-            <div className="divider" />
-          </div>
+          <Button text="Make a Donation" onClick={() => navigate('/')} />
         </div>
       )}
+
+      <Dialog
+        open={!!deleteRequestType}
+        onClose={() => setDeleteRequestType('')}
+        className="relative z-50"
+      >
+        <DialogBackdrop className="fixed inset-0 bg-black/30" />
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <DialogPanel className="max-w-lg space-y-4 border bg-white p-12 rounded-lg">
+            <DialogTitle className="font-bold">
+              Confirm Donation Removal
+            </DialogTitle>
+            <Description>
+              Are you sure you want to remove your{' '}
+              {deleteRequestType === 'donate-financial'
+                ? 'financial'
+                : 'materials'}{' '}
+              donation?
+            </Description>
+            <div className="flex gap-4">
+              <button
+                className="bg-gray-400 text-white px-4 py-2 rounded-md"
+                onClick={() => setDeleteRequestType('')}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                onClick={() => {
+                  setDeleteRequestType('');
+
+                  if (deleteRequestType === 'donate-financial') {
+                    setCustomDonation(0);
+                    setPresetDonation(0);
+                  } else {
+                    setMaterialDonations({});
+                  }
+                }}
+              >
+                Confirm
+              </button>
+            </div>
+          </DialogPanel>
+        </div>
+      </Dialog>
     </div>
   );
 }

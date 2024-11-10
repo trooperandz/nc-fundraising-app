@@ -156,7 +156,7 @@ export default function ContactInformation() {
             </div>
           </div>
 
-          <Button text="Proceed to Checkout" onClick={handleSubmit} />
+          <Button text="Continue" onClick={handleSubmit} />
         </div>
       </div>
     </Layout>
