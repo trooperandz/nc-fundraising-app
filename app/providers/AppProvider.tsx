@@ -1,10 +1,12 @@
 import * as React from 'react';
 
+export type DeliveryType = 'delivery' | 'financial';
+
 export type MaterialDonation = {
   name: string;
   quantity: number;
   price: number;
-  deliveryType: string;
+  deliveryType: DeliveryType;
 };
 
 export type MaterialDonations = {

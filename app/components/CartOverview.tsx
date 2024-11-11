@@ -7,8 +7,8 @@ import {
   DialogPanel,
   DialogTitle,
 } from '@headlessui/react';
-import { MaterialDonation, useAppContext } from '../providers/AppProvider';
-import { formatToDollars } from '../utils';
+import { useAppContext } from '../providers/AppProvider';
+import { classNames, formatPhoneNumber, formatToDollars } from '../utils';
 import {
   DocumentCurrencyDollarIcon,
   PencilSquareIcon,
@@ -41,6 +41,14 @@ export default function Cart() {
     customDonation > 0 ||
     materialDonationsTotalBreakdown.total > 0;
   const materialDonationIds = Object.keys(materialDonations);
+  const materialFinancialDonationIds = materialDonationIds.filter(
+    id => materialDonations[id].deliveryType === 'financial',
+  );
+  const materialDeliveryDonationIds = materialDonationIds.filter(
+    id => materialDonations[id].deliveryType === 'delivery',
+  );
+  console.log({ materialDeliveryDonationIds });
+  console.log({ materialFinancialDonationIds });
 
   const navigate = useNavigate();
 
@@ -67,23 +75,25 @@ export default function Cart() {
           </div>
 
           <div className="flex flex-col w-full px-6 py-6 bg-white rounded-lg overflow-x-scroll">
-            <div className="flex items-center">
-              <label className="mr-4 md:mr-6 text-gray-500">Name:</label>
+            <div className="block md:flex items-center">
+              <label className="mr-4 text-gray-500">Name:</label>
               <p className="font-light">{registerUser.name}</p>
             </div>
 
             <div className="divider" />
 
-            <div className="flex items-center">
-              <label className="mr-4 md:mr-6 text-gray-500">Email:</label>
+            <div className="block md:flex items-center">
+              <label className="mr-4 text-gray-500">Email:</label>
               <p className="font-light">{registerUser.email}</p>
             </div>
 
             <div className="divider" />
 
-            <div className="flex items-center">
-              <label className="mr-4 md:mr-6 text-gray-500">Phone:</label>
-              <p className="font-light">{registerUser.phone}</p>
+            <div className="block md:flex items-center">
+              <label className="mr-4 text-gray-500">Phone:</label>
+              <p className="font-light">
+                {formatPhoneNumber(registerUser.phone)}
+              </p>
             </div>
 
             <div className="divider" />
@@ -94,7 +104,7 @@ export default function Cart() {
       {customDonation > 0 || presetDonation > 0 ? (
         <div className="mb-6 w-full px-6 py-6 bg-gray-100 rounded-lg">
           <div className="flex justify-between w-full mb-0">
-            <div className="flex items-center mb-0">
+            <div className="flex items-center mb-4">
               <DocumentCurrencyDollarIcon className="size-8 text-green-500 mr-2" />
               <h3 className="text-gray-600">Financial Donation</h3>
             </div>
@@ -119,17 +129,17 @@ export default function Cart() {
             </div>
           </div>
 
-          <div className="divider" />
-
-          <p className="font-medium ml-3 self-start">
-            {formatToDollars(Number(customDonation || presetDonation))}
-          </p>
+          <div className="w-full px-4 py-5 bg-white rounded-lg">
+            <p className="font-medium ml-3 self-start">
+              {formatToDollars(Number(customDonation || presetDonation))}
+            </p>
+          </div>
         </div>
       ) : null}
 
       <br />
 
-      {materialDonationIds.length > 0 ? (
+      {materialDonationIds.length > 0 && (
         <div className="mb-6 w-full px-6 py-6 bg-gray-100 rounded-lg">
           <div className="flex items-center justify-between mb-0">
             <div className="flex items-center mb-4 mt-2">
@@ -156,90 +166,98 @@ export default function Cart() {
               </div>
             </div>
           </div>
-
-          <div className="w-full px-4 py-4 bg-white rounded-lg overflow-x-scroll">
-            <table className="m-auto">
-              <thead>
-                <tr className="text-gray-500 font-medium">
-                  <th className="w-30 text-left pl-4">Item Name</th>
-                  <th className="px-4">Quantity</th>
-                  <th className="px-3">Price</th>
-                  <th className="px-4 w-24">Method</th>
-                  <th className="px-3">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {materialDonationIds.map(id => {
-                  const item: MaterialDonation = materialDonations[id];
-
-                  return (
-                    <tr key={id}>
-                      <td className="pl-4">{item.name}</td>
-                      <td className="text-center">{item.quantity}</td>
-                      <td className="text-center">${item.price.toFixed(2)}</td>
-                      <td className="py-2 text-center">
-                        {item.deliveryType.charAt(0).toUpperCase() +
-                          item.deliveryType.slice(1)}
-                      </td>
-                      <td className="text-center">
-                        ${(item.quantity * Number(item.price)).toFixed(2)}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-              <tfoot className="pt-4">
-                <tr className="py-4">
-                  <td className="pl-4 pt-2 font-normal">Total:</td>
-                  <td />
-                  <td />
-                  <td />
-                  <td className="font-normal">
-                    {formatToDollars(materialDonationsTotalBreakdown.total)}
-                  </td>
-                </tr>
-                {materialDonationsTotalBreakdown.delivery > 0 && (
-                  <>
-                    <tr className="py-2">
-                      <td
-                        colSpan={2}
-                        className="pl-4 pt-2 font-normal subtotal"
-                      >
-                        For Delivery
-                      </td>
-                      <td className="subtotal" />
-                      <td className="subtotal" />
-                      <td className="text-red-600 font-normal pt-2 subtotal">{`(${formatToDollars(
-                        materialDonationsTotalBreakdown.delivery,
-                      )})`}</td>
-                    </tr>
-                    <tr>
-                      <td colSpan={2} className="pl-4 pt-2">
-                        Due now:
-                      </td>
-                      <td />
-                      <td />
-                      <td className="pt-2 text-center">
-                        {formatToDollars(
-                          materialDonationsTotalBreakdown.financial,
+          {materialDeliveryDonationIds.length > 0 ? (
+            <div className="w-full px-4 py-4 bg-white rounded-lg overflow-x-scroll">
+              <h4 className="mb-3 text-lg text-gray-500">
+                Items for Delivery:
+              </h4>
+              {materialDeliveryDonationIds.map((id, i) => {
+                const donation = materialDonations[id];
+                console.log({ donation });
+                return (
+                  <div>
+                    <p className={i > 0 ? 'mt-5' : ''}>{donation.name}</p>
+                    <div className="divider !mt-2 !mb-2" />
+                    <div className="flex justify-between items-center">
+                      <div className="flex">
+                        <p className="flex flex-1 text-green-600">
+                          {formatToDollars(donation.price)}
+                        </p>
+                        <p className="ml-3">x</p>
+                        <p className="ml-3">{donation.quantity}</p>
+                      </div>
+                      <p>
+                        $
+                        {(donation.quantity * Number(donation.price)).toFixed(
+                          2,
                         )}
-                      </td>
-                    </tr>
-                  </>
-                )}
-              </tfoot>
-            </table>
-          </div>
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+              <div className="flex justify-between mt-8">
+                <p className="text-gray-500">Total:</p>
+                <p className="text-green-600">
+                  {formatToDollars(materialDonationsTotalBreakdown.delivery)}
+                </p>
+              </div>
+            </div>
+          ) : null}
+
+          {materialFinancialDonationIds.length > 0 ? (
+            <div
+              className={classNames(
+                `w-full px-4 py-4 bg-white rounded-lg overflow-x-scroll`,
+                materialDonationsTotalBreakdown.delivery > 0 && 'mt-6',
+              )}
+            >
+              <h4 className="mb-3 text-lg text-gray-500">
+                Items for Financial Donation:
+              </h4>
+              {materialFinancialDonationIds.map((id, i) => {
+                const donation = materialDonations[id];
+
+                return (
+                  <div>
+                    <p className={i > 0 ? 'mt-5' : ''}>{donation.name}</p>
+                    <div className="divider !mt-2 !mb-2" />
+                    <div className="flex justify-between items-center">
+                      <div className="flex">
+                        <p className="flex flex-1 text-green-600">
+                          {formatToDollars(donation.price)}
+                        </p>
+                        <p className="ml-3">x</p>
+                        <p className="ml-3">{donation.quantity}</p>
+                      </div>
+                      <p>
+                        $
+                        {(donation.quantity * Number(donation.price)).toFixed(
+                          2,
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+              <div className="flex justify-between mt-8">
+                <p className="text-gray-500">Total:</p>
+                <p className="text-green-600">
+                  {formatToDollars(materialDonationsTotalBreakdown.financial)}
+                </p>
+              </div>
+            </div>
+          ) : null}
         </div>
-      ) : null}
+      )}
 
       {materialDonationsTotalBreakdown.financial > 0 ? (
         <div className="flex items-center mt-7 mb-6">
           <>
-            <h3 className="text-gray-600">Total Donation Due Now:</h3>
+            <h3 className="text-gray-600">Total Funds Due Now:</h3>
             <p className="font-bold ml-3 text-green-600">
               {formatToDollars(
-                Number(customDonation || presetDonation || 0) + // TODO: fix 0 issue
+                (customDonation || presetDonation) +
                   materialDonationsTotalBreakdown.financial,
               )}
             </p>
@@ -249,7 +267,7 @@ export default function Cart() {
 
       {!isDonation && (
         <div className="flex flex-col items-center mb-4 w-full px-6 py-6 bg-gray-100 rounded-lg">
-          <ShoppingBagIcon className="size-24 text-gray-400" />
+          <ShoppingBagIcon className="size-20 text-gray-400" />
 
           <p className="mt-8">Your cart is currently empty.</p>
 

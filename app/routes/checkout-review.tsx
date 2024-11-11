@@ -66,8 +66,6 @@ export const action = async ({ request }) => {
   }
 };
 
-interface Props {}
-
 interface FormData {
   emailAddress: string;
   customDonation: string;
@@ -89,6 +87,12 @@ export default function CheckoutReview() {
   const fetcher = useFetcher<FormData>();
 
   const navigate = useNavigate();
+
+  const isOnlyDeliveryDonations =
+    customDonation === 0 &&
+    presetDonation === 0 &&
+    materialDonationsTotalBreakdown.financial === 0 &&
+    materialDonationsTotalBreakdown.delivery > 0;
 
   const isDonations =
     customDonation > 0 ||
@@ -122,7 +126,7 @@ export default function CheckoutReview() {
 
         {isDonations ? (
           <Button
-            text="Proceed to Payment"
+            text={isOnlyDeliveryDonations ? 'Continue' : 'Proceed to Payment'}
             onClick={() => {
               if (!registerUser.email) {
                 setError('You must enter your contact information.');
@@ -137,16 +141,20 @@ export default function CheckoutReview() {
 
                 localStorage.setItem('appState', JSON.stringify(state));
 
-                return fetcher.submit(
-                  {
-                    emailAddress: registerUser.email,
-                    customDonation,
-                    presetDonation,
-                    materialDonationsFinancial:
-                      materialDonationsTotalBreakdown.financial,
-                  },
-                  { method: 'post' },
-                );
+                if (isOnlyDeliveryDonations) {
+                  navigate('/checkout-confirmation');
+                } else {
+                  return fetcher.submit(
+                    {
+                      emailAddress: registerUser.email,
+                      customDonation,
+                      presetDonation,
+                      materialDonationsFinancial:
+                        materialDonationsTotalBreakdown.financial,
+                    },
+                    { method: 'post' },
+                  );
+                }
               }
             }}
           />

@@ -189,6 +189,39 @@ Stripe link page from David:
     Only show cart to regular users
       For simplicity, always show it; just show empty cart if nothing in localStorage
 
-Final TODOs 
+Final TODOs (Google sheet: https://docs.google.com/spreadsheets/d/1Pk9st2rijPqZ7glJ78Z6IDHLCJ-m1GtDpqNjMHnqtk8/edit?usp=sharing)
+  Heading:
+    Help Rebuild Hot Springs
   Only show user nav icon if user is administrator (David?), or remove it?
+    Hide account link for all
+  Fix logic for financial donation/materials donation (only show error if BOTH are null)
+    Need to separate end total (show delivery if they selected delivery, separate from the financial and show subtotal etc)
+  Add api error handling to materials endpoint 
+  Fix up/down counter on input for Safari (no arrows), and error handling for when entering more than the allowed number via the keyboard
+    (counter prevents going up but keyboard is not prevented)
+  Stripe customer_email not getting passed (maybe due to test mode?)
+    email David example
+  Whisky image easter egg (actually put a background in or a repeating pattern?)
+    Remove on the main page
+  Do we need a better way to show the "Continue" button on the materials screen (hard to see all the way at the bottom)
+    Future todo related to table UI etc
+  Delivery info if chose delivery 
+    Show them the delivery info on the checkout confirmation page ()
+  Social share nothing done yet besides dummy link
+    nothing done yet
+  Format user phone display on cart view
+  Materials table update
+    Keep remaining, rename it to Needed (remove Donated)
+    David will shorten name title
+    Look at options for presenting the items as cards (maybe categories) -> would be later update
+  Put something at the top for instructions for some pages
+  Remove the Projects link page
+  David will do an About content
 
+* Separate financial from materail on totals 
+  material breakdown:
+    global state update:
+
+What if they ONLY select material deliveries?
+  Just route straight to checkout confirmation?
+  Button just say continue?

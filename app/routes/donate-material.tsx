@@ -4,7 +4,7 @@ import { json, Link, useNavigate } from '@remix-run/react';
 import { LinksFunction, LoaderFunction } from '@remix-run/node';
 import { donationApi, MaterialsInventory } from '../services/api';
 import { useLoaderData } from '@remix-run/react';
-import { useAppContext } from '../providers/AppProvider';
+import { DeliveryType, useAppContext } from '../providers/AppProvider';
 // @ts-ignore
 import stylesheet from '../styles/donate-material.css?url'; // TODO: get index.d.ts to fix this type error
 import Layout from '../components/Layout';
@@ -49,7 +49,7 @@ export default function DonateMaterial() {
     name: string,
     quantity: number,
     price: number,
-    deliveryType: string,
+    deliveryType: DeliveryType,
   ) => {
     if (quantity > 0) {
       setError('');
@@ -68,7 +68,7 @@ export default function DonateMaterial() {
     }
   };
 
-  const handleDeliveryTypeChange = (id: number, value: string) => {
+  const handleDeliveryTypeChange = (id: number, value: DeliveryType) => {
     const updatedMaterialsDonation = {
       ...materialDonations[id],
       deliveryType: value,
@@ -169,9 +169,7 @@ export default function DonateMaterial() {
                             name={`materials-donation-type-${item.id}`}
                             onChange={(
                               e: React.ChangeEvent<HTMLInputElement>,
-                            ) =>
-                              handleDeliveryTypeChange(item.id, e.target.value)
-                            }
+                            ) => handleDeliveryTypeChange(item.id, 'financial')}
                             value="financial"
                             checked={
                               materialDonations[item.id]
@@ -189,9 +187,7 @@ export default function DonateMaterial() {
                             name={`materials-donation-type-${item.id}`}
                             onChange={(
                               e: React.ChangeEvent<HTMLInputElement>,
-                            ) =>
-                              handleDeliveryTypeChange(item.id, e.target.value)
-                            }
+                            ) => handleDeliveryTypeChange(item.id, 'delivery')}
                             value="delivery"
                             checked={
                               materialDonations[item.id]
