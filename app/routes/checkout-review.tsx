@@ -23,12 +23,16 @@ export const action = async ({ request }) => {
   const formData = await request.formData();
 
   const emailAddress = formData.get('emailAddress');
-  const customDonation = formData.get('customDonation');
-  const presetDonation = formData.get('presetDonation');
-  const materialDonationsFinancial = formData.get('materialDonationsFinancial');
+  const customDonation = Number(formData.get('customDonation'));
+  const presetDonation = Number(formData.get('presetDonation'));
+  const materialDonationsFinancial = Number(
+    formData.get('materialDonationsFinancial'),
+  );
   const baseUrl = isProductionMode
     ? 'https://clownfish-app-pnafy.ondigitalocean.app'
     : 'http://localhost:3000';
+
+  const financialDonation = customDonation || presetDonation;
 
   const data = {
     // TODO: email field is not pre-populating, don't know why (maybe because are in test mode?)
@@ -45,11 +49,8 @@ export const action = async ({ request }) => {
                 ? 'Donation'
                 : 'Materials Donation',
           },
-          // In cents
-          unit_amount:
-            (Number(customDonation || presetDonation) +
-              Number(materialDonationsFinancial)) *
-            100,
+          // Required to be in cents
+          unit_amount: (financialDonation + materialDonationsFinancial) * 100,
         },
         quantity: 1,
       },
@@ -58,7 +59,6 @@ export const action = async ({ request }) => {
 
   try {
     const response = await donationApi.post('/sessions', data);
-
     return redirect(response.data.url);
   } catch (error) {
     console.error('Error creating session:', error);
