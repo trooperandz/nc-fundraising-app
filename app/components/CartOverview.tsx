@@ -103,8 +103,8 @@ export default function Cart() {
 
       {customDonation > 0 || presetDonation > 0 ? (
         <div className="mb-6 w-full px-6 py-6 bg-gray-100 rounded-lg">
-          <div className="flex justify-between w-full mb-0">
-            <div className="flex items-center mb-4">
+          <div className="flex items-center justify-between w-full mb-4">
+            <div className="flex items-center">
               <DocumentCurrencyDollarIcon className="size-8 text-green-500 mr-2" />
               <h3 className="text-gray-600">Financial Donation</h3>
             </div>
