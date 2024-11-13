@@ -6,6 +6,8 @@ import tailwindStyles from './styles/tailwind.css?url'; // TODO: get index.d.ts 
 // @ts-ignore
 import appStyles from './styles/index.css?url';
 import { AppProvider } from './providers/AppProvider';
+// @ts-ignore
+import WhiskyGirlImage from './images/whisky-girl.png';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: tailwindStyles },
@@ -23,7 +25,8 @@ export default function App() {
   return (
     <html className="h-full bg-gray-100">
       <head>
-        <link rel="icon" href="data:image/x-icon;base64,AA" />
+        <link rel="icon" type="image/png" href={WhiskyGirlImage} />
+        <link rel="apple-touch-icon" href={WhiskyGirlImage} />
         <Meta />
         <Links />
       </head>
