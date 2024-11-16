@@ -1,6 +1,12 @@
 // Shows options for materials etc donation options
 import * as React from 'react';
-import { json, Link, useNavigate } from '@remix-run/react';
+import {
+  isRouteErrorResponse,
+  json,
+  Link,
+  useNavigate,
+  useRouteError,
+} from '@remix-run/react';
 import { LinksFunction, LoaderFunction } from '@remix-run/node';
 import { donationApi, MaterialsInventory } from '../services/api';
 import { useLoaderData } from '@remix-run/react';
@@ -12,6 +18,7 @@ import BackButton from '../components/BackButton';
 import Button from '../components/Button';
 import { classNames, formatToDollars } from '../utils';
 import Heading from '../components/Heading';
+import ErrorScreen from '../components/ErrorScreen';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -21,7 +28,7 @@ interface Props {}
 
 export const loader: LoaderFunction = async ({ params }) => {
   try {
-    const response = await donationApi.get('/tools_materials_inventory');
+    const response = await donationApi.get('/tools_materials_inventorys');
 
     return json(response.data);
   } catch (error) {
@@ -219,5 +226,33 @@ export default function DonateMaterial() {
         {error && <p className="tex-lg text-red-700 mt-8">{error}</p>}
       </div>
     </Layout>
+  );
+}
+
+// ErrorBoundary to handle errors in this route
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const navigate = useNavigate();
+
+  // Handle known error responses (e.g., 404 or 500 status codes)
+  if (isRouteErrorResponse(error)) {
+    return (
+      <ErrorScreen>
+        <h2>Sorry, an unexpected error occurred.</h2>
+        <Button text="Back to Home" onClick={() => navigate('/')} />
+        {/* <h2>Error {error.status}</h2>d */}
+        {/* <p>{error.statusText}</p> */}
+        {/* {error.data?.message && <p>{error.data.message}</p>} */}
+      </ErrorScreen>
+    );
+  }
+
+  // Handle unexpected errors
+  return (
+    <ErrorScreen>
+      <h2>Oops! Something went wrong.</h2>
+      <p>{error instanceof Error ? error.message : 'Unknown error'}</p>
+      <Button text="Back to Home" onClick={() => navigate('/')} />
+    </ErrorScreen>
   );
 }

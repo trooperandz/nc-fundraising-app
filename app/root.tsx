@@ -7,7 +7,7 @@ import tailwindStyles from './styles/tailwind.css?url'; // TODO: get index.d.ts 
 import appStyles from './styles/index.css?url';
 import { AppProvider } from './providers/AppProvider';
 // @ts-ignore
-import WhiskyGirlImage from './images/whisky-girl.png';
+import WhiskyGirlImage from './images/whisky-girl.jpg';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: tailwindStyles },
