@@ -1,17 +1,23 @@
 // Review cart/delivery items before finalizing checkout
 import * as React from 'react';
-import { useFetcher, useNavigate } from '@remix-run/react';
+import {
+  useFetcher,
+  useNavigate,
+  useNavigation,
+  useRouteError,
+} from '@remix-run/react';
 import Layout from '../components/Layout';
 import CartOverview from '../components/CartOverview';
 // @ts-ignore
 import stylesheet from '../styles/cart.css?url'; // TODO: get index.d.ts to fix this type error
-import { json, LinksFunction, redirect } from '@remix-run/node';
+import { LinksFunction, redirect } from '@remix-run/node';
 import { useAppContext } from '../providers/AppProvider';
 import { donationApi } from '../services/api';
 import BackButton from '../components/BackButton';
 import Button from '../components/Button';
-import e from 'express';
 import Heading from '../components/Heading';
+import ErrorScreen from '../components/ErrorScreen';
+import { LoadingSpinner } from '../components/LoadingSpinner';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -58,11 +64,12 @@ export const action = async ({ request }) => {
   };
 
   try {
+    await new Promise(resolve => setTimeout(resolve, 3000));
     const response = await donationApi.post('/sessions', data);
     return redirect(response.data.url);
   } catch (error) {
     console.error('Error creating session:', error);
-    return json({ error: 'Unable to create session' }, { status: 500 });
+    throw new Response('Failed to create session', { status: 500 });
   }
 };
 
@@ -87,6 +94,12 @@ export default function CheckoutReview() {
   const fetcher = useFetcher<FormData>();
 
   const navigate = useNavigate();
+  const navigation = useNavigation();
+
+  const isLoading =
+    fetcher.state === 'submitting' ||
+    fetcher.state === 'loading' ||
+    navigation.state === 'loading';
 
   const isOnlyDeliveryDonations =
     customDonation === 0 &&
@@ -112,54 +125,77 @@ export default function CheckoutReview() {
           }}
         />
 
-        <Heading title="Review Your Donation" />
+        <Heading title="Review Your Contribution" />
 
-        {!registerUser.email && isDonations && (
-          <p className="tex-lg text-red-700 mt-0 mb-8">
-            Please edit your contact information.
-          </p>
-        )}
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            {!registerUser.email && isDonations && (
+              <p className="tex-lg text-red-700 mt-0 mb-8">
+                Please edit your contact information.
+              </p>
+            )}
 
-        <CartOverview />
+            <CartOverview />
 
-        {error && <p className="tex-lg text-red-700 mt-2">{error}</p>}
+            {error && <p className="tex-lg text-red-700 mt-2">{error}</p>}
 
-        {isDonations ? (
-          <Button
-            text={isOnlyDeliveryDonations ? 'Continue' : 'Proceed to Payment'}
-            onClick={() => {
-              if (!registerUser.email) {
-                setError('You must enter your contact information.');
-              } else {
-                const state = {
-                  customDonation,
-                  presetDonation,
-                  registerUser,
-                  materialDonations,
-                  materialDonationsTotalBreakdown,
-                };
-
-                localStorage.setItem('appState', JSON.stringify(state));
-
-                if (isOnlyDeliveryDonations) {
-                  navigate('/checkout-confirmation');
-                } else {
-                  return fetcher.submit(
-                    {
-                      emailAddress: registerUser.email,
+            {isDonations ? (
+              <Button
+                text={
+                  isOnlyDeliveryDonations ? 'Continue' : 'Proceed to Payment'
+                }
+                onClick={() => {
+                  if (!registerUser.email) {
+                    setError('You must enter your contact information.');
+                  } else {
+                    const state = {
                       customDonation,
                       presetDonation,
-                      materialDonationsFinancial:
-                        materialDonationsTotalBreakdown.financial,
-                    },
-                    { method: 'post' },
-                  );
-                }
-              }
-            }}
-          />
-        ) : null}
+                      registerUser,
+                      materialDonations,
+                      materialDonationsTotalBreakdown,
+                    };
+
+                    localStorage.setItem('appState', JSON.stringify(state));
+
+                    if (isOnlyDeliveryDonations) {
+                      navigate('/checkout-confirmation');
+                    } else {
+                      return fetcher.submit(
+                        {
+                          emailAddress: registerUser.email,
+                          customDonation,
+                          presetDonation,
+                          materialDonationsFinancial:
+                            materialDonationsTotalBreakdown.financial,
+                        },
+                        { method: 'post' },
+                      );
+                    }
+                  }
+                }}
+              />
+            ) : null}
+          </>
+        )}
       </div>
     </Layout>
+  );
+}
+
+// ErrorBoundary to handle errors in this route
+export function ErrorBoundary() {
+  const error = useRouteError();
+  const navigate = useNavigate();
+
+  // Handle unexpected errors
+  return (
+    <ErrorScreen>
+      <h2>Sorry, an unexpected error occurred while creating your cart.</h2>
+
+      <Button text="Reload" onClick={() => navigate('/')} />
+    </ErrorScreen>
   );
 }

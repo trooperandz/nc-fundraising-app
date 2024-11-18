@@ -1,18 +1,16 @@
 // Shows options for materials etc donation options
 import * as React from 'react';
 import {
-  isRouteErrorResponse,
   json,
   Link,
   useNavigate,
+  useNavigation,
   useRouteError,
 } from '@remix-run/react';
-import { LinksFunction, LoaderFunction } from '@remix-run/node';
+import { LoaderFunction } from '@remix-run/node';
 import { donationApi, MaterialsInventory } from '../services/api';
 import { useLoaderData } from '@remix-run/react';
 import { DeliveryType, useAppContext } from '../providers/AppProvider';
-// @ts-ignore
-import stylesheet from '../styles/donate-material.css?url'; // TODO: get index.d.ts to fix this type error
 import Layout from '../components/Layout';
 import BackButton from '../components/BackButton';
 import Button from '../components/Button';
@@ -20,15 +18,12 @@ import { classNames, formatToDollars } from '../utils';
 import Heading from '../components/Heading';
 import ErrorScreen from '../components/ErrorScreen';
 
-export const links: LinksFunction = () => [
-  { rel: 'stylesheet', href: stylesheet },
-];
-
 interface Props {}
 
 export const loader: LoaderFunction = async ({ params }) => {
+  await new Promise(resolve => setTimeout(resolve, 3000));
   try {
-    const response = await donationApi.get('/tools_materials_inventorys');
+    const response = await donationApi.get('/tools_materials_inventory  ');
 
     return json(response.data);
   } catch (error) {
@@ -46,9 +41,11 @@ export default function DonateMaterial() {
   } = useAppContext();
 
   const navigate = useNavigate();
+  const navigation = useNavigation();
 
+  const isLoading = navigation.state === 'loading';
   const materials = useLoaderData<MaterialsInventory>();
-
+  console.log({ isLoading });
   const [error, setError] = React.useState('');
 
   const handleCounterChange = (
@@ -108,7 +105,9 @@ export default function DonateMaterial() {
 
         <Heading title="Donate Materials" />
 
-        {materials?.length > 0 ? (
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : materials?.length > 0 ? (
           <div className="w-full max-w-xl">
             {materials.map(item => {
               return (
@@ -234,25 +233,14 @@ export function ErrorBoundary() {
   const error = useRouteError();
   const navigate = useNavigate();
 
-  // Handle known error responses (e.g., 404 or 500 status codes)
-  if (isRouteErrorResponse(error)) {
-    return (
-      <ErrorScreen>
-        <h2>Sorry, an unexpected error occurred.</h2>
-        <Button text="Back to Home" onClick={() => navigate('/')} />
-        {/* <h2>Error {error.status}</h2>d */}
-        {/* <p>{error.statusText}</p> */}
-        {/* {error.data?.message && <p>{error.data.message}</p>} */}
-      </ErrorScreen>
-    );
-  }
-
   // Handle unexpected errors
   return (
     <ErrorScreen>
-      <h2>Oops! Something went wrong.</h2>
-      <p>{error instanceof Error ? error.message : 'Unknown error'}</p>
-      <Button text="Back to Home" onClick={() => navigate('/')} />
+      <h2>
+        Sorry, an unexpected error occurred while loading donation materials.
+      </h2>
+
+      <Button text="Reload" onClick={() => navigate('/')} />
     </ErrorScreen>
   );
 }
