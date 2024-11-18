@@ -137,8 +137,6 @@ export default function Cart() {
         </div>
       ) : null}
 
-      <br />
-
       {materialDonationIds.length > 0 && (
         <div className="mb-6 w-full px-6 py-6 bg-gray-100 rounded-lg">
           <div className="flex items-center justify-between mb-0">
@@ -252,7 +250,7 @@ export default function Cart() {
       )}
 
       {materialDonationsTotalBreakdown.financial > 0 ? (
-        <div className="flex items-center mt-7 mb-6">
+        <div className="flex items-center mt-6 mb-6">
           <>
             <h3 className="text-gray-600">Total Funds Due Now:</h3>
             <p className="font-bold ml-3 text-green-600">
