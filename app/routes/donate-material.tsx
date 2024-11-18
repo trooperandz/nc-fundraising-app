@@ -21,7 +21,6 @@ import ErrorScreen from '../components/ErrorScreen';
 interface Props {}
 
 export const loader: LoaderFunction = async ({ params }) => {
-  await new Promise(resolve => setTimeout(resolve, 3000));
   try {
     const response = await donationApi.get('/tools_materials_inventory  ');
 

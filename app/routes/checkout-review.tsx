@@ -64,7 +64,6 @@ export const action = async ({ request }) => {
   };
 
   try {
-    await new Promise(resolve => setTimeout(resolve, 3000));
     const response = await donationApi.post('/sessions', data);
     return redirect(response.data.url);
   } catch (error) {
