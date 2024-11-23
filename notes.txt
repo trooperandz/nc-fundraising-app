@@ -225,3 +225,15 @@ Final TODOs (Google sheet: https://docs.google.com/spreadsheets/d/1Pk9st2rijPqZ7
 What if they ONLY select material deliveries?
   Just route straight to checkout confirmation?
   Button just say continue?
+
+Allow to select zero on materials donation after selecting something else?
+  right now, you can't update the amount to zero
+
+Need to add favicon
+
+11/23/24
+  Tested some social media share buttons on-site from ShareThis
+
+  Realized when you delete a cart item, it doesn't clear your  localstorage; need to fix that 
+
+  Maybe add some animations?

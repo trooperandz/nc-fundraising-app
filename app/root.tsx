@@ -41,6 +41,12 @@ export default function App() {
         <title>Help Rebuild Hot Springs</title>
         <Meta />
         <Links />
+        {/* Share buttons */}
+        <script
+          type="text/javascript"
+          src="https://platform-api.sharethis.com/js/sharethis.js#property=674218f07b87400012b9592e&product=inline-share-buttons&source=platform"
+          async
+        ></script>
       </head>
       <body className="h-full">
         <AppProvider>
