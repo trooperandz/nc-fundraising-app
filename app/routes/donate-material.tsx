@@ -44,7 +44,7 @@ export default function DonateMaterial() {
 
   const isLoading = navigation.state === 'loading';
   const materials = useLoaderData<MaterialsInventory>();
-  console.log({ isLoading });
+
   const [error, setError] = React.useState('');
 
   const handleCounterChange = (

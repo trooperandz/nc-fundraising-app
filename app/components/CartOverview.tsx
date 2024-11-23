@@ -47,8 +47,6 @@ export default function Cart() {
   const materialDeliveryDonationIds = materialDonationIds.filter(
     id => materialDonations[id].deliveryType === 'delivery',
   );
-  console.log({ materialDeliveryDonationIds });
-  console.log({ materialFinancialDonationIds });
 
   const navigate = useNavigate();
 
@@ -171,9 +169,9 @@ export default function Cart() {
               </h4>
               {materialDeliveryDonationIds.map((id, i) => {
                 const donation = materialDonations[id];
-                console.log({ donation });
+
                 return (
-                  <div>
+                  <div key={donation.name}>
                     <p className={i > 0 ? 'mt-5' : ''}>{donation.name}</p>
                     <div className="divider !mt-2 !mb-2" />
                     <div className="flex justify-between items-center">
@@ -217,7 +215,7 @@ export default function Cart() {
                 const donation = materialDonations[id];
 
                 return (
-                  <div>
+                  <div key={donation.name}>
                     <p className={i > 0 ? 'mt-5' : ''}>{donation.name}</p>
                     <div className="divider !mt-2 !mb-2" />
                     <div className="flex justify-between items-center">
@@ -294,7 +292,9 @@ export default function Cart() {
             <div className="flex gap-4">
               <button
                 className="bg-gray-400 text-white px-4 py-2 rounded-md"
-                onClick={() => setDeleteRequestType('')}
+                onClick={() => {
+                  setDeleteRequestType('');
+                }}
               >
                 Cancel
               </button>
@@ -302,6 +302,28 @@ export default function Cart() {
                 className="bg-blue-500 text-white px-4 py-2 rounded-md"
                 onClick={() => {
                   setDeleteRequestType('');
+
+                  const storageAppState = localStorage.getItem('appState');
+                  const parsedAppState = storageAppState
+                    ? JSON.parse(storageAppState)
+                    : undefined;
+
+                  // Remove/restore items in persisted cart state item if any is saved
+                  if (parsedAppState) {
+                    if (deleteRequestType === 'donate-financial') {
+                      delete parsedAppState.customDonation;
+                      delete parsedAppState.presetDonation;
+                    } else {
+                      parsedAppState.materialDonations = {};
+                      delete parsedAppState.materialDonationsTotalBreakdown;
+                    }
+                  }
+
+                  // Resave updated localStorage object
+                  localStorage.setItem(
+                    'appState',
+                    JSON.stringify(parsedAppState),
+                  );
 
                   if (deleteRequestType === 'donate-financial') {
                     setCustomDonation(0);
