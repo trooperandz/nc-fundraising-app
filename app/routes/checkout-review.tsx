@@ -41,7 +41,6 @@ export const action = async ({ request }) => {
   const financialDonation = customDonation || presetDonation;
 
   const data = {
-    // TODO: email field is not pre-populating, don't know why (maybe because are in test mode?)
     customer_email: emailAddress,
     success_url: `${baseUrl}/checkout-confirmation`,
     cancel_url: `${baseUrl}/checkout-review`,
@@ -95,6 +94,7 @@ export default function CheckoutReview() {
   const navigate = useNavigate();
   const navigation = useNavigation();
 
+  // TODO: create action reusable hook (or one hook for loaders and actions)
   const isLoading =
     fetcher.state === 'submitting' ||
     fetcher.state === 'loading' ||

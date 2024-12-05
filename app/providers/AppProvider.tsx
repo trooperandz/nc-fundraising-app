@@ -2,6 +2,13 @@ import * as React from 'react';
 
 export type DeliveryType = 'delivery' | 'financial';
 
+export type Donor = {
+  id: number;
+  name: string;
+  email: string;
+  phone_number: string;
+};
+
 export type MaterialDonation = {
   name: string;
   quantity: number;
@@ -28,12 +35,14 @@ export type MaterialDonationBreakdown = {
 export type AppContext = {
   user: string | undefined;
   customDonation: number;
+  donor?: Donor;
   materialDonations: MaterialDonations;
   materialDonationsTotalBreakdown: MaterialDonationBreakdown;
   presetDonation: number;
   registerUser: RegisterUser;
   resetAppState: () => void;
   setCustomDonation: (customDonation: number) => void;
+  setDonor: (donor: Donor) => void;
   setMaterialDonations: (materialDonations: MaterialDonations) => void;
   setPresetDonation: (presetDonation: number) => void;
   setRegisterUser: (user: RegisterUser) => void;
@@ -49,6 +58,7 @@ const defaultRegisterUser = {
 };
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
+  const [donor, setDonor] = React.useState<Donor>();
   const [user, setUser] = React.useState<string>();
   const [materialDonations, setMaterialDonations] =
     React.useState<MaterialDonations>({});
@@ -104,12 +114,14 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     <AppContext.Provider
       value={{
         customDonation,
+        donor,
         materialDonations,
         materialDonationsTotalBreakdown,
         presetDonation,
         registerUser,
         resetAppState,
         setCustomDonation,
+        setDonor,
         setMaterialDonations,
         setPresetDonation,
         setRegisterUser,

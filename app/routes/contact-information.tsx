@@ -1,14 +1,14 @@
 // Contact information form
 import * as React from 'react';
-import { useNavigate, useNavigation } from '@remix-run/react';
-import { useAppContext } from '../providers/AppProvider';
+import { useFetcher, useNavigate, useNavigation } from '@remix-run/react';
+import { Donor, useAppContext } from '../providers/AppProvider';
 import Layout from '../components/Layout';
 import { formatPhoneNumber } from '../utils';
-import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid';
 import BackButton from '../components/BackButton';
 import Button from '../components/Button';
 import Heading from '../components/Heading';
 import { LoadingSpinner } from '../components/LoadingSpinner';
+import { donationApi } from '../services/api';
 
 interface Props {}
 
@@ -16,11 +16,37 @@ const nameRegex = /^[A-Za-z\s]*$/;
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const phoneRegex = /^\d{10}$/;
 
-export default function ContactInformation() {
-  const { registerUser, setRegisterUser } = useAppContext();
+export const action = async ({ request }) => {
+  const formData = await request.formData();
 
+  const name = formData.get('name');
+  const email = formData.get('email');
+  const phone_number = formData.get('phone');
+
+  const donorData = {
+    name,
+    email,
+    phone_number,
+  };
+
+  try {
+    const response = await donationApi.post<Donor>('/donors', donorData);
+    console.log({ response });
+    const data = response.data;
+
+    return data;
+  } catch (error) {
+    console.error('Error creating donor:', error);
+    throw new Response('Failed to create donor', { status: 500 });
+  }
+};
+
+export default function ContactInformation() {
+  const { donor, registerUser, setDonor, setRegisterUser } = useAppContext();
+  console.log({ donor });
   const navigate = useNavigate();
   const navigation = useNavigation();
+  const fetcher = useFetcher<FormData>();
 
   const [errors, setErrors] = React.useState({
     name: '',
@@ -28,7 +54,22 @@ export default function ContactInformation() {
     phone: '',
   });
 
-  const isLoading = navigation.state === 'loading';
+  const isLoading =
+    fetcher.state === 'submitting' ||
+    fetcher.state === 'loading' ||
+    navigation.state === 'loading';
+
+  const fetcherData = fetcher.data;
+
+  // TODO: check this return data; does it return the action return, or the data returned?
+  React.useEffect(() => {
+    if (fetcherData) {
+      console.log('fetcherData: ', fetcherData);
+      localStorage.setItem('donor', JSON.stringify(fetcherData));
+      setDonor(fetcherData as Donor);
+      navigate('/checkout-review');
+    }
+  }, [fetcherData]);
 
   const handleChangeText = (value: string, key: string) => {
     let updatedErrors = { ...errors };
@@ -76,7 +117,14 @@ export default function ContactInformation() {
     setErrors(newErrors);
 
     if (!newErrors.name && !newErrors.email && !newErrors.phone) {
-      navigate('/checkout-review');
+      return fetcher.submit(
+        {
+          email: registerUser.email,
+          name: registerUser.name,
+          phone: registerUser.phone,
+        },
+        { method: 'post' },
+      );
     } else {
       return;
     }

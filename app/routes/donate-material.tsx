@@ -22,6 +22,7 @@ interface Props {}
 
 export const loader: LoaderFunction = async ({ params }) => {
   try {
+    // TODO: replace with getMaterialsInventory() api util fn
     const response = await donationApi.get('/tools_materials_inventory  ');
 
     return json(response.data);
@@ -42,6 +43,7 @@ export default function DonateMaterial() {
   const navigate = useNavigate();
   const navigation = useNavigation();
 
+  // TODO: put this in a reusable hook instead
   const isLoading = navigation.state === 'loading';
   const materials = useLoaderData<MaterialsInventory>();
 
