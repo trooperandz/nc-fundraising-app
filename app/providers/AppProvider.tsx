@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { APP_STATE_STORAGE } from '../utils/constants';
 
 export type DeliveryType = 'delivery' | 'financial';
 
@@ -68,7 +69,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     React.useState<RegisterUser>(defaultRegisterUser);
 
   React.useEffect(() => {
-    const storageAppState = localStorage.getItem('appState');
+    const storageAppState = localStorage.getItem(APP_STATE_STORAGE);
 
     if (storageAppState) {
       const parsed = JSON.parse(storageAppState);

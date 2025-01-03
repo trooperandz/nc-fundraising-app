@@ -237,3 +237,41 @@ Need to add favicon
   Realized when you delete a cart item, it doesn't clear your  localstorage; need to fix that 
 
   Maybe add some animations?
+
+12/4/24
+  localStorage.setItem('donor', JSON.stringify(fetcherData));
+  (can access donor.id)
+
+  *When sending donations to /donations endpoint, send as an array like so:
+    [
+      {
+        donor_id,
+        donation_type,
+        amount,
+        item_donated,
+        quantity_donated,
+      },
+      {
+        donor_id,
+        donation_type,
+        amount,
+        item_donated,
+        quantity_donated,
+      },
+    ]
+
+12/11/24
+  Issues: /donors post happens at contact-information screen; maybe should happen at the checkout-review because what if user needs to edit contact info?
+    Esp because right now in the db, it doesn't overwrite old records, just keeps creating them
+  Need to fix the error UI so that it has gutter
+
+  Discovered that if you don't create a new donor (or save the donor id from it for the next POST), you will get an empty service response
+    was an empty array in your case of Posting to /donations
+  
+12/27/24
+  Confirmed storage value of pending transaction
+  Now need to make a PATCH update with the updated delivery_status
+    What to do for this value?
+      leave shipped_by_doner as-is 
+      change cash and item (financial, non-shipped by donor item) to "purchase"
+    Got a 404 error when sending updated array as patch

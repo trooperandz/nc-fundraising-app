@@ -21,6 +21,23 @@ export type MaterialsInventory = {
   unit_price: number;
 }[];
 
+export type DeliveryStatus =
+  | 'pending'
+  | 'purchase'
+  | 'puchased'
+  | 'shipped_by_donor';
+
+export type DonationType = 'cash' | 'item';
+
+export interface DonationApiRecord {
+  donor_id: number;
+  donation_type: DonationType;
+  amount: number;
+  item_donated: number | null;
+  quantity_donated: number | null;
+  delivery_status: DeliveryStatus;
+}
+
 export const getMaterialsInventory = async () => {
   try {
     const result: AxiosResponse<MaterialsInventory> = await donationApi.get(

@@ -19,6 +19,7 @@ import {
 } from '@heroicons/react/16/solid';
 import { useNavigate } from '@remix-run/react';
 import Button from './Button';
+import { APP_STATE_STORAGE } from '../utils/constants';
 
 interface Props {}
 
@@ -253,7 +254,7 @@ export default function Cart() {
             <h3 className="text-gray-600">Total Funds Due Now:</h3>
             <p className="font-bold ml-3 text-green-600">
               {formatToDollars(
-                (customDonation || presetDonation) +
+                (customDonation || presetDonation || 0) +
                   materialDonationsTotalBreakdown.financial,
               )}
             </p>
@@ -303,7 +304,8 @@ export default function Cart() {
                 onClick={() => {
                   setDeleteRequestType('');
 
-                  const storageAppState = localStorage.getItem('appState');
+                  const storageAppState =
+                    localStorage.getItem(APP_STATE_STORAGE);
                   const parsedAppState = storageAppState
                     ? JSON.parse(storageAppState)
                     : undefined;
@@ -321,7 +323,7 @@ export default function Cart() {
 
                   // Resave updated localStorage object
                   localStorage.setItem(
-                    'appState',
+                    APP_STATE_STORAGE,
                     JSON.stringify(parsedAppState),
                   );
 
